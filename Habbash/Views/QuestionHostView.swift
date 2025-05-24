@@ -40,7 +40,7 @@ struct QuestionHostView<Content: View>: View {
                             .frame(width: 42, height: 42)
                             .overlay(
                                 Text(questionNumber)
-                                    .font(.system(size: 22, weight: .bold))
+                                    .font(.custom("BalooBhaijaan2-Medium", size: 22))
                                     .foregroundColor(.white)
                             )
                             .padding(.trailing, 24)

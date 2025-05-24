@@ -35,7 +35,7 @@ struct ChoiceScreen: View {
                     // Portrait: show a prompt
                     Color.black.opacity(0.7).ignoresSafeArea()
                     Text("بالله اقلب جوالك")
-                        .font(.title2)
+                        .font(.custom("BalooBhaijaan2-Medium", size: 22))
                         .foregroundColor(.white)
                         .padding()
                         .background(Color.black.opacity(0.8))

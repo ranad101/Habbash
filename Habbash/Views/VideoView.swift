@@ -59,7 +59,7 @@ struct VideoView: View {
                 VStack {
                     Spacer()
                     Text("ممكن تقلب الجوال عشان تستمتع اكثر")
-                        .font(.headline)
+                        .font(.custom("BalooBhaijaan2-Medium", size: 17))
                         .foregroundColor(.white)
                         .padding()
                         .background(Color.black.opacity(0.7))

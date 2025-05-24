@@ -15,7 +15,7 @@ struct SplashView: View {
             VStack(spacing: 0) {
                 Spacer()
                 Text("Habbash")
-                    .font(.system(size: 64, weight: .heavy, design: .rounded))
+                    .font(.custom("BalooBhaijaan2-Medium", size: 64))
                     .foregroundColor(Color(hex: "#F9B933"))
                     .shadow(color: Color.black.opacity(0.15), radius: 4, x: 0, y: 2)
                     .padding(.bottom, 8)

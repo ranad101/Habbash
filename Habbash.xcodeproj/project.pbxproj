@@ -6,6 +6,20 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildRule section */
+		02E050F82DE2062D008F53B8 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			fileType = text.plist;
+			inputFiles = (
+			);
+			isEditable = 1;
+			outputFiles = (
+			);
+			script = "# builtin-copyPlist\n";
+		};
+/* End PBXBuildRule section */
+
 /* Begin PBXContainerItemProxy section */
 		024DB55F2DE1AC3000A2983D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -29,9 +43,22 @@
 		024DB5682DE1AC3000A2983D /* HabbashUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HabbashUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		02E050F92DE20726008F53B8 /* Exceptions for "Habbash" folder in "Habbash" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				info.plist,
+			);
+			target = 024DB5502DE1AC2F00A2983D /* Habbash */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		024DB5532DE1AC2F00A2983D /* Habbash */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				02E050F92DE20726008F53B8 /* Exceptions for "Habbash" folder in "Habbash" target */,
+			);
 			path = Habbash;
 			sourceTree = "<group>";
 		};
@@ -104,6 +131,7 @@
 				024DB54F2DE1AC2F00A2983D /* Resources */,
 			);
 			buildRules = (
+				02E050F82DE2062D008F53B8 /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -400,6 +428,7 @@
 				DEVELOPMENT_TEAM = 265P58VWJ4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Habbash/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -428,6 +457,7 @@
 				DEVELOPMENT_TEAM = 265P58VWJ4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Habbash/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

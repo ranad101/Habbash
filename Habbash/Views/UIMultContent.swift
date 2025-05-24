@@ -12,7 +12,7 @@ struct UIMultContent: View {
     var body: some View {
         VStack(spacing: 24) {
             Text(question.questionText)
-                .font(.system(size: question.questionFontSize ?? 22, weight: .regular))
+                .font(.custom("BalooBhaijaan2-Medium", size: question.questionFontSize ?? 22))
                 .multilineTextAlignment(.center)
                 .padding()
 
@@ -51,8 +51,7 @@ struct UIMultContent: View {
                                     .frame(width: 151.677, height: 81)
                                     Text(question.answers[idx])
                                         .foregroundColor(.white)
-                                        .font(.system(size: question.answerFontSizes?[idx] ?? 20, weight: .bold))
-                                        .bold()
+                                        .font(.custom("BalooBhaijaan2-Medium", size: question.answerFontSizes?[idx] ?? 20))
                                 }
                             }
                             .disabled(isCorrect == true)
