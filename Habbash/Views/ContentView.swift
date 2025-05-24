@@ -34,24 +34,52 @@ struct ContentView: View {
         case .question:
             if let question = viewModel.currentQuestion {
                 switch viewModel.currentQuestionIndex {
-                case 4:
-                    QuestionHostView(
-                        viewModel: viewModel,
-                        questionNumber: question.questionNumber,
-                        content: Question5(onNext: { viewModel.goToNextQuestion() })
-                    )
-                case 7:
-                    QuestionHostView(
-                        viewModel: viewModel,
-                        questionNumber: question.questionNumber,
-                        content: Question8(onNext: { viewModel.goToNextQuestion() })
-                    )
-                case 9:
-                    QuestionHostView(
-                        viewModel: viewModel,
-                        questionNumber: question.questionNumber,
-                        content: Question10(onNext: { viewModel.goToNextQuestion() })
-                    )
+                case 11:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question12(onNext: { viewModel.goToNextQuestion() }))
+                case 12:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question13(onNext: { viewModel.goToNextQuestion() }))
+                case 14:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question15(onNext: { viewModel.goToNextQuestion() }))
+                case 18:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question19(onNext: { viewModel.goToNextQuestion() }))
+                case 20:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question21(onNext: { viewModel.goToNextQuestion() }))
+                case 21:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question22(onNext: { viewModel.goToNextQuestion() }))
+                case 23:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question24(onNext: { viewModel.goToNextQuestion() }))
+                case 25:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question26(onNext: { viewModel.goToNextQuestion() }))
+                case 26:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question27(answers: ["", "طيارة", "سيارة", "دراجة"], onNext: { viewModel.goToNextQuestion() }))
+                case 27:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question28(onNext: { viewModel.goToNextQuestion() }))
+                case 29:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question30(onNext: { viewModel.goToNextQuestion() }))
+                case 30:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question31(onNext: { viewModel.goToNextQuestion() }))
+                case 33:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question34(onNext: { viewModel.goToNextQuestion() }))
+                case 35:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question36(onNext: { viewModel.goToNextQuestion() }))
+                case 36:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question37(onNext: { viewModel.goToNextQuestion() }))
+                case 37:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question38(onNext: { viewModel.goToNextQuestion() }))
+                case 39:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question40())
+                case 40:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question41(onNext: { viewModel.goToNextQuestion() }))
+                case 41:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question42(onNext: { viewModel.goToNextQuestion() }))
+                case 42:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question43(onNext: { viewModel.goToNextQuestion() }))
+                case 44:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question45(onNext: { viewModel.goToNextQuestion() }))
+                case 47:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question48(onNext: { viewModel.goToNextQuestion() }))
+                case 48:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question49(onNext: { viewModel.goToNextQuestion() }))
                 default:
                     QuestionHostView(
                         viewModel: viewModel,
