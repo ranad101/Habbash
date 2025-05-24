@@ -4,51 +4,48 @@ import AVFoundation
 struct Question34: View {
     @State private var selectedCircles: Set<Int> = []
     @State private var audioPlayer: AVAudioPlayer?
+    @State private var cupCount: Int = 0
+
     var onNext: () -> Void = {}
 
     var body: some View {
-        VStack(spacing: -88) {
+        VStack() {  // غيرت spacing لسالب 100 لرقم إيجابي
             Text("كم فتحه بالفروه")
-                .font(.custom("BalooBhaijaan2-Medium", size: 32))
-                .padding(.top,-70)
+                .font(.largeTitle)
             ZStack {
                 Image("fro")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 350, height: 350)
-                    .cornerRadius(12)
-                    .shadow(radius: 4)
-                    .padding(.top, 50)
-                ForEach(1..<9, id: \.self) { number in
-                    numberedCircle(number: number, x: CGFloat(50 * (number % 3 - 1)), y: CGFloat(50 * (number / 3 - 1)))
+                    .frame(width: 300, height: 300)
+                ForEach(1..<9) { number in
+                    numberedCircle(number: number,
+                                   x: CGFloat(50 * (number % 3 - 1)),
+                                   y: CGFloat(50 * (number / 3 - 1)))
                 }
             }
             .padding()
-            HStack(spacing: 10) {
+
+            HStack() {
                 Button(action: {
-                    if let first = selectedCircles.first {
-                        selectedCircles.remove(first)
+                    if cupCount > 0 {
+                        cupCount -= 1
                     }
                 }) {
-                    Image("minus")
+                    Image("minus6")
                         .resizable()
-                        .scaledToFit()
-                        .frame(width: 50, height: 50)
+                        .frame(width: 42, height: 40)
                 }
+
+                Text("\(cupCount)")
+                    .font(.largeTitle)
+
                 Button(action: {
-                    if selectedCircles.count < 8 {
-                        selectedCircles.insert(selectedCircles.count + 1)
-                    }
+                    cupCount += 1
                 }) {
-                    Image("plss")
+                    Image("plus6")
                         .resizable()
-                        .scaledToFit()
-                        .frame(width: 118, height: 133)
-                        .padding(.top, 20)
-                        .padding(.horizontal, -10)
+                        .frame(width: 42, height: 40)
                 }
             }
-            .padding(.top, 20)
+
             Button(action: {
                 checkAnswer()
             }) {
@@ -57,7 +54,7 @@ struct Question34: View {
                     .scaledToFit()
                     .frame(width: 100, height: 50)
             }
-            .padding(.top, 50)
+            .padding(.top, 30)  // غيرت من 99 ل 30 لراحة العرض
         }
     }
 
@@ -69,7 +66,7 @@ struct Question34: View {
                 selectedCircles.insert(number)
             }
         }) {
-            Image("circleSelect")
+            Image("circleImage") // استبدل "circleImage" باسم صورة الدائرة الصحيحة
                 .resizable()
                 .scaledToFit()
                 .frame(width: 50, height: 50)
@@ -79,7 +76,7 @@ struct Question34: View {
     }
 
     func checkAnswer() {
-        if selectedCircles.count == 8 {
+        if cupCount == 8 {
             playSound(isCorrect: true)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
                 onNext()
@@ -98,10 +95,16 @@ struct Question34: View {
             } catch {
                 print("Error playing sound: \(error)")
             }
+        } else {
+            print("لم يتم العثور على ملف الصوت \(soundName).wav")
         }
     }
 }
 
 #Preview {
-    Question34()
-} 
+    QuestionHostView(
+        viewModel: GameViewModel(),
+        questionNumber: "٣٤",
+        content: Question34(onNext: {})
+    )
+}

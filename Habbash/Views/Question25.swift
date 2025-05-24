@@ -30,11 +30,11 @@ struct Question25: View {
 
     var body: some View {
         GeometryReader { geo in
-            VStack(spacing: 50) {
+            VStack(spacing: 0) {
                 Text("فوّز المقص")
                     .font(.custom("BalooBhaijaan2-Medium", size: 36))
                     .foregroundColor(.black)
-                    .padding(.top, 50)
+                    .padding(.top, 110)
                 Spacer(minLength:0)
                 ZStack {
                     // ROCK
@@ -117,5 +117,9 @@ struct Question25: View {
 }
 
 #Preview {
-    Question25()
+    QuestionHostView(
+        viewModel: GameViewModel(),
+        questionNumber: "٢٥",
+        content: Question25(onNext: {})
+    )
 } 

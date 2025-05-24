@@ -5,68 +5,85 @@ struct Question30: View {
     @State private var answer: String = ""
     @State private var isCorrect = false
     @State private var audioPlayer: AVAudioPlayer?
+    var onNext: () -> Void = {}
+
     let questionText = "كم عدد الشهور اللي فيها ٢٨ يوم؟"
     let correctAnswer = "١٢"
     let numberButtons = ["مسح","٩", "٨", "٧", "٦", "٥", "٤", "٣", "٢", "٠", "١","تم"]
-    var onNext: () -> Void = {}
+    @State private var pageNumber: String = "٣٠"
+
     var body: some View {
-        VStack(spacing: 10) {
-            Text(questionText)
-                .font(.custom("BalooBhaijaan2-Medium", size: 24))
-                .multilineTextAlignment(.center)
-                .foregroundColor(.black)
-                .padding(.horizontal, 16)
-            ZStack {
-                Image("box")
-                    .resizable()
-                    .frame(width: 300, height: 100)
-                Text(answer)
-                    .font(.custom("BalooBhaijaan2-Medium", size: 36))
+        ZStack {
+            VStack(spacing: 20) {
+                Text(questionText)
+                    .font(.title2)
                     .foregroundColor(.black)
-            }
-            Spacer()
-            // Number pad
-            VStack(spacing: 8) {
-                ForEach(0..<4) { row in
-                    HStack(spacing: 8) {
-                        ForEach(0..<3) { col in
-                            let idx = row * 3 + col
-                            if idx < numberButtons.count {
-                                Button(action: {
-                                    handleButtonTap(numberButtons[idx])
-                                }) {
-                                    Text(numberButtons[idx])
-                                        .font(.custom("BalooBhaijaan2-Medium", size: 24))
-                                        .frame(width: 70, height: 50)
-                                        .background(Color.blue.opacity(0.8))
-                                        .foregroundColor(.white)
-                                        .cornerRadius(10)
-                                }
+
+                ZStack {
+                    Image("box")
+                        .resizable()
+                        .frame(width: 300, height: 100)
+
+                    Text(answer)
+                        .font(.largeTitle)
+                        .foregroundColor(.black)
+                }
+
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4), spacing: 10) {
+                    ForEach(numberButtons, id: \.self) { number in
+                        Button(action: {
+                            handleButtonPress(number)
+                        }) {
+                            ZStack {
+                                Image("numper")
+                                    .resizable()
+                                    .frame(width: 70, height: 70)
+                                    .shadow(radius: 3)
+
+                                Text(number)
+                                    .font(.title)
+                                    .foregroundColor(.white)
                             }
                         }
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
+                .padding(.horizontal, 20)
+
+                Spacer()
             }
-            Spacer()
+            .padding(.top, 40)
         }
     }
-    func handleButtonTap(_ value: String) {
-        if value == "مسح" {
+
+    func handleButtonPress(_ number: String) {
+        switch number {
+        case "مسح":
             answer = ""
-        } else if value == "تم" {
-            isCorrect = (answer == correctAnswer)
-            playSound(isCorrect: isCorrect)
-            if isCorrect {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-                    onNext()
-                }
-            } else {
-                answer = ""
+            isCorrect = false
+        case "تم":
+            checkAnswer()
+        default:
+            if answer.count < 3 {
+                answer += number
+            }
+        }
+    }
+
+    func checkAnswer() {
+        if answer == correctAnswer {
+            isCorrect = true
+            playSound(isCorrect: true)
+            // الانتقال التلقائي بعد نصف ثانية
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                onNext()
             }
         } else {
-            answer += value
+            isCorrect = false
+            playSound(isCorrect: false)
         }
     }
+
     func playSound(isCorrect: Bool) {
         let soundName = isCorrect ? "success" : "failure"
         if let soundURL = Bundle.main.url(forResource: soundName, withExtension: "wav") {
@@ -81,5 +98,9 @@ struct Question30: View {
 }
 
 #Preview {
-    Question30()
-} 
+    QuestionHostView(
+        viewModel: GameViewModel(),
+        questionNumber: "٢٨",
+        content: Question30(onNext: {})
+    )
+}

@@ -4,7 +4,9 @@ import AVFoundation
 struct Question12: View {
     @State private var showClosedCat = false
     @State private var audioPlayer: AVAudioPlayer?
+    @State private var skipCount = 0
     @State private var selectedIndex: Int? = nil
+    
     let answers = [
         "ميو ميو ميو",    // الصحيحة
         "ميو ميو ميو ميو",
@@ -13,12 +15,15 @@ struct Question12: View {
     ]
     let correctIndex = 0
     let questionText = "ايش قالت القطة؟"
-    var onNext: () -> Void
-
+    let questionNumber = 12
+    var onNext: () -> Void   // أضف هذا المتغير
+    
     var body: some View {
+        
         VStack(spacing: 0) {
             Spacer().frame(height: 40)
-            // Cat image (changes after 6 seconds)
+            
+            // صورة القطة (تتغير بعد 6 ثوانٍ)
             if showClosedCat {
                 Image("catCLOSED")
                     .resizable()
@@ -33,6 +38,7 @@ struct Question12: View {
                     .padding(.bottom, 8)
                     .onAppear {
                         playMeow()
+                        // بعد 6 ثوانٍ تتغير الصورة
                         DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
                             withAnimation {
                                 showClosedCat = true
@@ -40,57 +46,84 @@ struct Question12: View {
                         }
                     }
             }
-            // Question text
+            
+            // نص السؤال
             Text(questionText)
-                .font(.custom("BalooBhaijaan2-Medium", size: 22))
+                .font(.system(size: 22, weight: .bold))
                 .foregroundColor(.black)
                 .padding(.bottom, 24)
-            // Answer buttons (2x2 grid)
-            VStack(spacing: 16) {
-                HStack(spacing: 16) {
-                    answerButton(index: 0)
-                    answerButton(index: 1)
+            
+            // الخيارات
+            VStack(spacing: 20) {
+                HStack(spacing: 24) {
+                    answerButton(text: answers[0], index: 0)
+                    answerButton(text: answers[1], index: 1)
                 }
-                HStack(spacing: 16) {
-                    answerButton(index: 2)
-                    answerButton(index: 3)
+                HStack(spacing: 24) {
+                    answerButton(text: answers[2], index: 2)
+                    answerButton(text: answers[3], index: 3)
                 }
             }
+            .padding(.horizontal, 16)
+            
             Spacer()
         }
     }
     
-    func playMeow() {
-        if let soundURL = Bundle.main.url(forResource: "meow", withExtension: "wav") {
-            do {
-                audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
-                audioPlayer?.play()
-            } catch {
-                print("Error playing sound: \(error)")
-            }
-        }
-    }
     
-    func answerButton(index: Int) -> some View {
+    // زر خيار الإجابة (يصبح أخضر فقط إذا كانت صحيحة ومختارة)
+    func answerButton(text: String, index: Int) -> some View {
         Button(action: {
-            selectedIndex = index
-            if index == correctIndex {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-                    onNext()
+            if selectedIndex == nil {
+                selectedIndex = index
+                if index == correctIndex {
+                    // الانتقال للسؤال 13 بعد نصف ثانية
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                        onNext()
+                    }
                 }
             }
         }) {
-            Text(answers[index])
-                .font(.custom("BalooBhaijaan2-Medium", size: 20))
-                .foregroundColor(.white)
-                .padding()
-                .background(selectedIndex == index ? (index == correctIndex ? Color.green : Color.red) : Color.blue)
-                .cornerRadius(12)
+            ZStack {
+                // استخدم صورة الزر الأخضر إذا كانت الإجابة الصحيحة ومختارة
+                if selectedIndex == index && index == correctIndex {
+                    Image("BUTTON.CORRECT")
+                        .resizable()
+                        .frame(width: 151.68, height: 81)
+                } else {
+                    Image("BUTTON.REGULAR")
+                        .resizable()
+                        .frame(width: 151.68, height: 81)
+                }
+                Text(text)
+                    .font(.system(size: 22, weight: .bold))
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 8)
+            }
         }
-        .disabled(selectedIndex != nil)
+        .buttonStyle(PlainButtonStyle())
+        .disabled(selectedIndex != nil) // يمنع الضغط بعد الاختيار
+    }
+    
+    // تشغيل صوت القطة مرة واحدة فقط
+    func playMeow() {
+        if let url = Bundle.main.url(forResource: "meowVoice", withExtension: "mp3") {
+            do {
+                audioPlayer = try AVAudioPlayer(contentsOf: url)
+                audioPlayer?.play()
+            } catch {
+                print("خطأ في تشغيل الصوت")
+            }
+        } else {
+            print("لم يتم العثور على ملف الصوت")
+        }
     }
 }
-
 #Preview {
-    Question12(onNext: {})
-} 
+    QuestionHostView(
+        viewModel: GameViewModel(),
+        questionNumber: "١٢",
+        content: Question12(onNext: {})
+    )
+}

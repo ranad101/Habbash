@@ -4,6 +4,8 @@ struct Question45: View {
     @State private var selected: Int? = nil
     @State private var isCorrect: Bool? = nil
     @State private var showFeedback: Bool = false
+    @ObservedObject var viewModel: GameViewModel
+    
     let answers = [
         "خشيم النوم", // Top left
         "وادي بقر",   // Top right
@@ -24,70 +26,49 @@ struct Question45: View {
     var onNext: () -> Void = {}
     
     var body: some View {
-        GeometryReader { geo in
-            ZStack {
-                // Background
-                Image("Q45.BACKGROUND")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: geo.size.width, height: geo.size.height)
-                    .offset(x: backgroundOffsetX, y: backgroundOffsetY)
-                    .ignoresSafeArea()
-                VStack(spacing: 0) {
-                    Spacer()
-                    // Answer texts
-                    ZStack {
-                        ForEach(0..<4) { i in
-                            answerText(index: i, fontSize: geo.size.width * 0.09)
-                                .position(x: geo.size.width * positions[i].x, y: geo.size.height * positions[i].y)
-                                .onTapGesture {
-                                    if selected == nil {
-                                        selected = i
-                                        isCorrect = (i == correctIndex)
-                                        showFeedback = true
-                                        SoundPlayer.playSound(named: isCorrect == true ? "success" : "failure")
-                                        if isCorrect == true {
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-                                                showFeedback = false
-                                                onNext()
-                                            }
-                                        } else {
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-                                                showFeedback = false
-                                                selected = nil
-                                                isCorrect = nil
-                                            }
-                                        }
-                                    }
+        VStack(spacing: 32) {
+            LazyVGrid(columns: [GridItem(), GridItem()], spacing: 24) {
+                ForEach(0..<4) { i in
+                    answerText(index: i)
+                        .onTapGesture {
+                            if selected == nil {
+                                selected = i
+                                if i == correctIndex {
+                                    SoundPlayer.playSound(named: "success")
+                                    viewModel.answer(isCorrect: true)
+                                } else {
+                                    SoundPlayer.playSound(named: "failure")
+                                    viewModel.answer(isCorrect: false)
                                 }
+                            }
                         }
-                    }
-                    Spacer(minLength: 150)
-                }
-                // Feedback overlay
-                if showFeedback {
-                    ZStack {
-                        Color.black.opacity(0.3).ignoresSafeArea()
-                        Image(systemName: isCorrect == true ? "checkmark.circle.fill" : "xmark.circle.fill")
-                            .font(.system(size: 120))
-                            .foregroundColor(isCorrect == true ? .green : .red)
-                    }
                 }
             }
         }
-        .ignoresSafeArea()
+        .padding(.horizontal, 24)
+        .padding(.top, 32)
+        .background(
+            Image("Q45.BACKGROUND")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+        )
     }
     
-    func answerText(index: Int, fontSize: CGFloat) -> some View {
+    func answerText(index: Int) -> some View {
         Text(answers[index])
-            .font(.custom("BalooBhaijaan2-Medium", size: fontSize))
+            .font(.custom("BalooBhaijaan2-Medium", size: 20))
             .foregroundColor(.white)
-            .padding(12)
+            .padding(8)
+            .frame(maxWidth: .infinity)
             .background(selected == index ? (isCorrect == true && index == correctIndex ? Color.green : Color.red) : Color.blue)
-            .cornerRadius(16)
+            .cornerRadius(12)
     }
 }
 
 #Preview {
-    Question45()
-} 
+    QuestionHostView(
+        viewModel: GameViewModel(),
+        questionNumber: "٤٥",
+        content: Question45(viewModel: GameViewModel(), onNext: {})
+    )
+}
