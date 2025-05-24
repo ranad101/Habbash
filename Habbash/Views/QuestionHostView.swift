@@ -47,7 +47,6 @@ struct QuestionHostView<Content: View>: View {
                     }
                     .padding(.top, 8)
                 }
-                .environment(\.layoutDirection, .leftToRight)
 
                 // The unique question content
                 content
@@ -78,10 +77,8 @@ struct QuestionHostView<Content: View>: View {
                     }
                     .padding(.bottom, 32)
                 }
-                .environment(\.layoutDirection, .leftToRight)
             }
         }
-        .environment(\.layoutDirection, .rightToLeft)
     }
 
     // Helper for skip bar image (reversed so initial has no gray)

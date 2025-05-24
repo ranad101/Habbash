@@ -62,18 +62,6 @@ struct UIMultContent: View {
                     }
                 }
             }
-
-            Button(action: {
-                onSkip()
-                // UI state will reset on question change
-            }) {
-                HStack {
-                    Image(systemName: "forward.end.fill")
-                    Text("\(skips)")
-                }
-            }
-            .disabled(skips == 0)
-            .padding(.top, 16)
         }
         .padding()
         // Reset state when question changes
