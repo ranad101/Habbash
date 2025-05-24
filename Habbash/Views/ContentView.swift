@@ -6,9 +6,18 @@ struct ContentView: View {
     var body: some View {
         switch viewModel.screen {
         case .splash:
-            SplashView(onFinish: { viewModel.goToVideo() })
-        case .video:
-            VideoView(onFinish: { viewModel.goToStart() })
+            SplashView(onFinish: { viewModel.goToVideo1() })
+        case .video1:
+            VideoView(videoName: "video1", onFinish: { viewModel.goToChoice() })
+        case .choice:
+            ChoiceScreen(
+                onOption1: { viewModel.goToVideo2() },
+                onOption2: { viewModel.goToVideo3() }
+            )
+        case .video2:
+            VideoView(videoName: "video2", onFinish: { viewModel.goToStart() })
+        case .video3:
+            VideoView(videoName: "video3", onFinish: { viewModel.goToStart() })
         case .start:
             StartPageView(onStart: { viewModel.startGame() })
         case .gameOver:
@@ -54,7 +63,10 @@ struct ContentView: View {
                 }
             } else {
                 Text("انتهت الأسئلة!")
-            }}}}
+            }
+        }
+    }
+}
 
 #Preview {
     ContentView()

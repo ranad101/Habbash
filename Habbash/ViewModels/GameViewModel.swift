@@ -3,7 +3,7 @@ import SwiftUI
 
 class GameViewModel: ObservableObject {
     enum Screen {
-        case splash, video, start, question, gameOver
+        case splash, video1, choice, video2, video3, start, question, gameOver
     }
 
     @Published var screen: Screen = .splash
@@ -166,7 +166,8 @@ class GameViewModel: ObservableObject {
         screen = .splash
     }
 
-    func goToVideo() {
-        screen = .video
-    }
+    func goToVideo1() { screen = .video1 }
+    func goToChoice() { screen = .choice }
+    func goToVideo2() { screen = .video2 }
+    func goToVideo3() { screen = .video3 }
 }
