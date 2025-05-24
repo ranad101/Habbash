@@ -27,12 +27,12 @@ struct UIMultContent: View {
                                     selectedAnswer = idx
                                     isCorrect = (idx == question.correctAnswerIndex)
                                     if isCorrect == true {
-                                        // Correct: show feedback, then advance
+                                        SoundPlayer.playSound(named: "success")
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                             onAnswer(idx)
                                         }
                                     } else {
-                                        // Wrong: show feedback, then reset selection so user can try again
+                                        SoundPlayer.playSound(named: "failure")
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                             selectedAnswer = nil
                                             isCorrect = nil
