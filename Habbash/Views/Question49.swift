@@ -13,87 +13,67 @@ struct Question49: View {
     @State private var flashIndex: Int? = nil
     @State private var canTap: Bool = false
     @State private var showSuccess: Bool = false
-    @State private var showFeedback: Bool = false
     @State private var cycles: Int = 0
     @State private var timer: Timer? = nil
+    @State private var skipCount: Int = 0
+    @ObservedObject var viewModel: GameViewModel
+    
     var onNext: () -> Void = {}
     
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                VStack(spacing: 0) {
-                    Spacer(minLength: 0)
-                    // Question text
-                    Text("اويلاو وين الكليجه اللي نبيها")
-                        .font(.custom("BalooBhaijaan2-Medium", size: 30))
-                        .foregroundColor(.black)
-                        .multilineTextAlignment(.center)
-                        .position(x: centerX, y: 50)
-                    // Klega circle
-                    ZStack {
-                        ForEach(0..<klegaCount, id: \.self) { i in
-                            let angle = Double(i) / Double(klegaCount) * 2 * Double.pi - Double.pi/2
-                            let x = centerX + radius * cos(angle)
-                            let y = centerY + radius * sin(angle)
-                            ZStack {
-                                Image("KLEGA")
-                                    .resizable()
-                                    .frame(width: klegaSize, height: klegaSize)
-                                    .background(
-                                        (isFlashing && flashIndex == i) ? Color.yellow.opacity(0.6) : Color.clear
-                                    )
-                                    .clipShape(Circle())
-                                    .onTapGesture {
-                                        if canTap && flashIndex == i {
-                                            showSuccess = true
-                                            showFeedback = true
-                                            canTap = false
-                                            SoundPlayer.playSound(named: "success")
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-                                                showFeedback = false
-                                                onNext()
-                                            }
-                                        }
-                                    }
-                                if showSuccess && flashIndex == i {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .resizable()
-                                        .frame(width: 40, height: 40)
-                                        .foregroundColor(.green)
+        ZStack {
+            // Question text
+            Text("اويلاو وين الكليجه اللي نبيها")
+                .font(.system(size: 30, weight: .bold))
+                .foregroundColor(.black)
+                .position(x: centerX , y: 50)
+            // Klega circle
+            ForEach(0..<klegaCount, id: \.self) { i in
+                let angle = Double(i) / Double(klegaCount) * 2 * Double.pi - Double.pi/2
+                let x = centerX + radius * cos(angle)
+                let y = centerY + radius * sin(angle)
+                ZStack {
+                    Image("KLEGA")
+                        .resizable()
+                        .frame(width: klegaSize, height: klegaSize)
+                        .background(
+                            (isFlashing && flashIndex == i) ? Color.yellow.opacity(0.6) : Color.clear
+                        )
+                        .clipShape(Circle())
+                        .onTapGesture {
+                            if canTap {
+                                if flashIndex == i {
+                                    // Correct answer - tapped the flashing klega
+                                    showSuccess = true
+                                    canTap = false
+                                    SoundPlayer.playSound(named: "success")
+                                    viewModel.answer(isCorrect: true)
+                                } else {
+                                    // Wrong answer - tapped a non-flashing klega
+                                    SoundPlayer.playSound(named: "failure")
+                                    viewModel.answer(isCorrect: false)
                                 }
                             }
-                            .position(x: x, y: y)
                         }
-                        // Animated hand
-                        if !showSuccess {
-                            let angle = Double(handIndex) / Double(klegaCount) * 2 * Double.pi - Double.pi/2
-                            let handX = centerX + (radius + 80) * cos(angle)
-                            let handY = centerY + (radius + 80) * sin(angle)
-                            Image("HAND")
-                                .resizable()
-                                .frame(width: handSize, height: handSize)
-                                .scaleEffect(x: -1, y: 1)
-                                .rotationEffect(.radians(angle - .pi/2))
-                                .position(x: handX, y: handY)
-                                .animation(.easeInOut(duration: 0.18), value: handIndex)
-                        }
-                    }
-                    Spacer(minLength: 150)
                 }
-                // Feedback overlay
-                if showFeedback {
-                    ZStack {
-                        Color.black.opacity(0.3).ignoresSafeArea()
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 120))
-                            .foregroundColor(.green)
-                    }
-                }
+                .position(x: x, y: y)
             }
-            .onAppear { startHandAnimation() }
-            .onDisappear { timer?.invalidate() }
+            // Animated hand
+            if !showSuccess {
+                let angle = Double(handIndex) / Double(klegaCount) * 2 * Double.pi - Double.pi/2
+                let handX = centerX + (radius + 80) * cos(angle)
+                let handY = centerY + (radius + 80) * sin(angle)
+                Image("HAND")
+                    .resizable()
+                    .frame(width: handSize, height: handSize)
+                    .scaleEffect(x: -1, y: 1)
+                    .rotationEffect(.radians(angle - .pi/2))
+                    .position(x: handX, y: handY)
+                    .animation(.easeInOut(duration: 0.18), value: handIndex)
+            }
         }
-        .ignoresSafeArea()
+        .onAppear { startHandAnimation() }
+        .onDisappear { timer?.invalidate() }
     }
     
     func startHandAnimation() {
@@ -104,7 +84,6 @@ struct Question49: View {
         flashIndex = nil
         canTap = false
         showSuccess = false
-        showFeedback = false
         timer = Timer.scheduledTimer(withTimeInterval: 0.20, repeats: true) { _ in
             if isFlashing {
                 // End flash
@@ -133,5 +112,9 @@ struct Question49: View {
 }
 
 #Preview {
-    Question49()
-} 
+    QuestionHostView(
+        viewModel: GameViewModel(),
+        questionNumber: "٤٩",
+        content: Question49(viewModel: GameViewModel(), onNext: {})
+    )
+}

@@ -143,5 +143,9 @@ struct DraggableItem: View {
 }
 
 #Preview {
-    Question38()
-} 
+    QuestionHostView(
+        viewModel: GameViewModel(),
+        questionNumber: "٣٨",
+        content: Question38(onNext: {})
+    )
+}
