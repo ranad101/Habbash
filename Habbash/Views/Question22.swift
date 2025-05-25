@@ -2,6 +2,7 @@ import SwiftUI
 
 struct Question22: View {
     @State private var selectedAnswer: Int? = nil
+    
     let answers = [
         "نملوكة",
         "ملكة النمل",
@@ -10,44 +11,83 @@ struct Question22: View {
     ]
     let correctIndex = 3
     var onNext: () -> Void = {}
-
+    
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
-                Spacer(minLength: 0)
-                // Question text
-                Text("أي من هذه هي نمنة فخمة؟")
-                    .font(.custom("BalooBhaijaan2-Medium", size: 26))
-                    .padding(.top, 10)
-                // Answer buttons
-                VStack(spacing: 24) {
-                    ForEach(0..<answers.count, id: \.self) { i in
-                        Button(action: {
-                            selectedAnswer = i
-                            if i == correctIndex {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-                                    onNext()
-                                }
-                            }
-                        }) {
-                            Text(answers[i])
-                                .font(.custom("BalooBhaijaan2-Medium", size: 22))
-                                .foregroundColor(.white)
-                                .padding()
-                                .background(selectedAnswer == i ? (i == correctIndex ? Color.green : Color.red) : Color.blue)
-                                .cornerRadius(12)
+                // Top bar just below dynamic island
+               
+                
+               
+                VStack(spacing: 0) {
+                    // Question number
+                   
+                    
+                    
+                    // Question image
+                    Image("ANT22")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 240)
+                        .padding(.bottom, 16)
+                    
+                    // Answer buttons grid
+                    VStack(spacing: 20) {
+                        HStack(spacing: 24) {
+                            answerButton(index: 0)
+                            answerButton(index: 1)
                         }
-                        .disabled(selectedAnswer != nil)
+                        HStack(spacing: 24) {
+                            answerButton(index: 2)
+                            answerButton(index: 3)
+                        }
                     }
+                    .padding(.horizontal, 16)
+                    .environment(\.layoutDirection, .rightToLeft)
                 }
-                .padding(.top, 32)
-                Spacer()
+                .frame(maxWidth: .infinity)
+                .frame(maxHeight: .infinity, alignment: .center)
+                Spacer(minLength: 150)
             }
+            .frame(width: geometry.size.width, height: geometry.size.height)
         }
         .ignoresSafeArea()
+    }
+    
+    func answerButton(index: Int) -> some View {
+        Button(action: {
+            selectedAnswer = index
+            if index == correctIndex {
+                // الانتقال للسؤال 23 بعد نصف ثانية
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                    onNext()
+                }
+            }
+        }) {
+            ZStack {
+                if selectedAnswer == index && index == correctIndex {
+                    Image("BUTTON.CORRECT")
+                        .resizable()
+                        .frame(height: 70)
+                } else {
+                    Image("BUTTON.REGULAR")
+                        .resizable()
+                        .frame(height: 70)
+                }
+                Text(answers[index])
+                    .font(.system(size: 22, weight: .bold))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 8)
+            }
+        }
+        .buttonStyle(PlainButtonStyle())
     }
 }
 
 #Preview {
-    Question22()
+    QuestionHostView(
+        viewModel: GameViewModel(),
+        questionNumber: "٢٢",
+        content: Question22(onNext: {})
+    )
 } 

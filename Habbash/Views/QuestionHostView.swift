@@ -45,7 +45,7 @@ struct QuestionHostView<Content: View>: View {
                             )
                             .padding(.trailing, 24)
                     }
-                    .padding(.top, 8)
+                    .padding(.top, 20)
                 }
 
                 // The unique question content
