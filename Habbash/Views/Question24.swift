@@ -2,36 +2,59 @@ import SwiftUI
 import AVFoundation
 
 struct Question24: View {
-    @State private var selectedAnswer: Int? = nil
+    @State private var skipCount = 0
+    @State private var selectedAnswer: Int? = nil // هذا سيظل لخيارات الإجابة العادية
     @State private var showFullScreenFeedback = false
-    @State private var isCorrectAnswer = false
+    @State private var isCorrectAnswerForOption: Bool = false // لتوضيح أنها تخص خيارات الأجوبة
     @State private var audioPlayer: AVAudioPlayer?
-    let answers = ["١٨", "٢٣،٩٣١", "١٢", "مو موجود!!!"]
+
+    @Binding var didTapHostQuestionNumberAsCorrect: Bool // تم تغيير الاسم ليكون أوضح
+
+    let answers = ["١٨", "٢٣،٩٣١", "١٢", "مو موجود!!!"] // مصفوفة الخيارات الأصلية، بدون "٢٤"
     let questionText = "٢٥ - ١ = ؟"
+    let maxSkips = 6
     var onNext: () -> Void = {}
 
     var body: some View {
         GeometryReader { geometry in
-            VStack(spacing: 50) {
-                Text(questionText)
-                    .font(.custom("BalooBhaijaan2-Medium", size: 26))
-                    .padding(.top, 10)
-                HStack(spacing: 24) {
-                    answerButton(index: 0)
-                    answerButton(index: 1)
+            ZStack {
+                VStack() {
+                    VStack(spacing: 50) {
+                        Text(questionText)
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .padding(.top, 10)
+
+                        VStack(spacing: 20) {
+                            HStack(spacing: 24) {
+                                answerButton(index: 0)
+                                answerButton(index: 1)
+                            }
+                            HStack(spacing: 24) {
+                                answerButton(index: 2)
+                                answerButton(index: 3)
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                        .environment(\.layoutDirection, .rightToLeft)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(maxHeight: .infinity, alignment: .center)
+
+                    Spacer(minLength: 150)
+                    .padding(.bottom, 32)
+                    .padding(.trailing, -100)
                 }
-                HStack(spacing: 24) {
-                    answerButton(index: 2)
-                    answerButton(index: 3)
+
+                // ⭐️ إظهار علامة الصح الكبيرة في منتصف Question24
+                // عندما يتم الضغط على رقم السؤال (٢٤) في QuestionHostView ويعتبر إجابة صحيحة.
+                if didTapHostQuestionNumberAsCorrect {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 80)) // حجم كبير
+                        .foregroundColor(.green)
+                        .transition(.scale.animation(.easeOut)) // تأثير سلس
+                        .position(x: geometry.size.width / 2, y: geometry.size.height / 2) // في المنتصف
                 }
-                Spacer()
-            }
-            .padding(.horizontal, 16)
-            .environment(\.layoutDirection, .rightToLeft)
-            .frame(maxWidth: .infinity)
-            .frame(maxHeight: .infinity, alignment: .center)
-            if showFullScreenFeedback {
-                FullScreenFeedbackView(isCorrect: isCorrectAnswer)
             }
         }
         .ignoresSafeArea()
@@ -40,32 +63,29 @@ struct Question24: View {
     func answerButton(index: Int) -> some View {
         Button(action: {
             selectedAnswer = index
-            isCorrectAnswer = (index == 0)
-            playSound(isCorrect: isCorrectAnswer)
-            showFullScreenFeedback = true
-            if isCorrectAnswer {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                    withAnimation {
-                        showFullScreenFeedback = false
-                    }
-                    onNext()
-                }
-            } else {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                    withAnimation {
-                        showFullScreenFeedback = false
-                    }
-                }
-            }
+            isCorrectAnswerForOption = false
+            playSound(isCorrect: false)
         }) {
-            Text(answers[index])
-                .font(.custom("BalooBhaijaan2-Medium", size: 22))
-                .foregroundColor(.white)
-                .padding()
-                .background(selectedAnswer == index ? (index == 0 ? Color.green : Color.red) : Color.blue)
-                .cornerRadius(12)
+            ZStack {
+                // يمكنك إظهار صورة مختلفة للزر إذا كانت الإجابة خاطئة
+                if selectedAnswer == index { // إذا تم اختيار هذا الزر
+                    Image("BUTTON.REGULAR") // يمكنك استخدام صورة "BUTTON.INCORRECT" إذا كانت متوفرة
+                        .resizable()
+                        .frame(width: 151.68, height: 81)
+                } else {
+                    Image("BUTTON.REGULAR")
+                        .resizable()
+                        .frame(width: 151.68, height: 81)
+                }
+
+                Text(answers[index])
+                    .font(.system(size: 22, weight: .bold))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 8)
+            }
         }
-        .disabled(selectedAnswer != nil)
+        .buttonStyle(PlainButtonStyle())
+        .disabled(showFullScreenFeedback)
     }
 
     func playSound(isCorrect: Bool) {
@@ -81,18 +101,11 @@ struct Question24: View {
     }
 }
 
-struct FullScreenFeedbackView: View {
-    let isCorrect: Bool
-    var body: some View {
-        ZStack {
-            Color.black.opacity(0.3).ignoresSafeArea()
-            Image(systemName: isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
-                .font(.system(size: 200))
-                .foregroundColor(isCorrect ? .green : .red)
-        }
-    }
-}
 
 #Preview {
-    Question24()
-} 
+    QuestionHostView(
+        viewModel: GameViewModel(),
+        questionNumber: "٢٤",
+        content: Question24(didTapHostQuestionNumberAsCorrect: .constant(false), onNext: {})
+    )
+}

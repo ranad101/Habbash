@@ -77,7 +77,7 @@ struct ContentView: View {
                 case 44:
                     QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question45(viewModel: viewModel, onNext: { viewModel.goToNextQuestion() }))
                 case 47:
-                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question48(onNext: { viewModel.goToNextQuestion() }))
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question45(viewModel: viewModel, onNext: { viewModel.goToNextQuestion() }))
                 case 48:
                     QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question49(viewModel: viewModel, onNext: { viewModel.goToNextQuestion() }))
                 case 49:

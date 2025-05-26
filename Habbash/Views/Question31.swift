@@ -1,85 +1,134 @@
 import SwiftUI
+import AVFoundation
 
 struct Question31: View {
     @State private var offset = CGSize.zero
     @State private var isDroppedOverAnimals = false
     @State private var showCheckmark = false
     @State private var soundPlayed = false
+    @State private var audioPlayer: AVAudioPlayer?
+
     var onNext: () -> Void = {}
 
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                VStack(spacing: 60) {
-                    Spacer(minLength: 0)
-                    // Question text with drag
-                    HStack(spacing: 4) {
-                        Text("السؤال")
-                            .font(.custom("BalooBhaijaan2-Medium", size: 24))
-                            .multilineTextAlignment(.center)
-                            .offset(offset)
-                            .gesture(
-                                DragGesture()
-                                    .onChanged { value in
-                                        self.offset = value.translation
+        GeometryReader { geo in
+            VStack(spacing: 120) {
+                HStack() {
+                    Text("السؤال")
+                        .font(.title2)
+                        .foregroundColor(isDroppedOverAnimals ? .green : .black)
+                        .offset(offset)
+                        .gesture(
+                            DragGesture()
+                                .onChanged { value in
+                                    // السماح بالحركة أفقياً وعمودياً مع حدود معقولة
+                                    let newX = value.translation.width
+                                    let newY = value.translation.height
+
+                                    // تقييد الحركة أفقياً داخل عرض الشاشة تقريباً
+                                    if abs(newX) < geo.size.width / 2 {
+                                        offset = CGSize(width: newX, height: newY)
                                     }
-                                    .onEnded { value in
-                                        if value.location.y > 150 && value.location.y < 350 {
-                                            isDroppedOverAnimals = true
-                                            showCheckmark = true
-                                            if !soundPlayed {
-                                                SoundPlayer.playSound(named: "success")
-                                                soundPlayed = true
-                                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-                                                    onNext()
-                                                }
+                                }
+                                .onEnded { value in
+                                    // حساب حدود drop المنطقة فوق الحيوانات (نستخدم قياسات geo)
+                                    // الحيوانات تبدأ تقريبا من 30% إلى 55% من ارتفاع الشاشة
+                                    let animalsTopY = geo.size.height * 0.3
+                                    let animalsBottomY = geo.size.height * 0.55
+                                    let droppedY = value.location.y
+
+                                    if droppedY >= animalsTopY && droppedY <= animalsBottomY {
+                                        isDroppedOverAnimals = true
+                                        showCheckmark = true
+
+                                        if !soundPlayed {
+                                            playSound(for: true)
+                                            soundPlayed = true
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                                                onNext()
                                             }
-                                        } else {
-                                            isDroppedOverAnimals = false
-                                            showCheckmark = false
-                                            soundPlayed = false
+                                        }
+
+                                        // ضبط مكان النص فوق الحيوانات، مركزي أفقياً، ثابت عمودياً فوقهم
+                                        withAnimation {
+                                            offset = CGSize(
+                                                width: 0,
+                                                height: animalsTopY - geo.size.height / 2 + 20
+                                            )
+                                        }
+                                    } else {
+                                        isDroppedOverAnimals = false
+                                        showCheckmark = false
+                                        soundPlayed = false
+
+                                        withAnimation {
+                                            offset = .zero
                                         }
                                     }
-                            )
-                            .foregroundColor(isDroppedOverAnimals ? .green : .black)
-                        Text("وين الحيوانات اللي فوق")
-                            .font(.custom("BalooBhaijaan2-Medium", size: 24))
-                            .multilineTextAlignment(.center)
-                    }
-                    .padding(.horizontal)
+                                }
+                        )
+                        .frame(minWidth: 10)
 
-                    // Animal images
-                    HStack(spacing: 15) {
-                        Image("animal4")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 100, height: 150)
-                        Image("animal2")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 100, height: 150)
-                        Image("animal3")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 100, height: 150)
-                    }
-                    .padding(.top, 20)
-
-                    if showCheckmark {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 50))
-                            .foregroundColor(.green)
-                            .padding(.top, 20)
-                    }
-
-                    Spacer(minLength: 60)
+                    Text("وين الحيوانات اللي فوق")
+                        .font(.title2)
+                        .foregroundColor(.black)
+                        .padding(.top, 3)
+                        .frame(minWidth: 180)
                 }
+                .frame(maxWidth: .infinity, alignment: .center)
+
+                HStack(spacing: 20) {
+                    Image("animal4")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 150)
+
+                    Image("animal5")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 150)
+
+                    Image("animal6")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 150)
+                }
+                .frame(maxWidth: .infinity)
+
+                if showCheckmark {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 50))
+                        .foregroundColor(.green)
+                        .padding(.top, 20)
+                }
+
+                Spacer()
             }
+            .frame(width: geo.size.width, height: geo.size.height)
+            .padding()
         }
-        .ignoresSafeArea()
+    }
+
+    func playSound(for correct: Bool) {
+        let soundName = correct ? "success" : "failure"
+        if let soundURL = Bundle.main.url(forResource: soundName, withExtension: "wav") {
+            do {
+                audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+                audioPlayer?.play()
+            } catch {
+                print("Error playing sound: \(error)")
+            }
+        } else {
+            print("لم يتم العثور على ملف الصوت \(soundName).wav")
+        }
     }
 }
 
+
 #Preview {
-    Question31()
-} 
+    QuestionHostView(
+        viewModel: GameViewModel(),
+        questionNumber: "٣١",
+        content: Question31(onNext: {})
+    )
+}
