@@ -50,21 +50,7 @@ class GameViewModel: ObservableObject {
             answerFontSizes: [22, 20, 18, 24]
         ),
         // Question 5 is interactive (Question5 view)
-        Question(
-            id: 5,
-            questionText: "(تفاعلي) سؤال ٥",
-            answers: ["", "", "", ""],
-            correctAnswerIndex: 0,
-            questionNumber: "٥"
-        ),
         // Question 6 is interactive (Question6 view)
-        Question(
-            id: 6,
-            questionText: "(تفاعلي) سؤال ٦",
-            answers: ["", "", "", ""],
-            correctAnswerIndex: 0,
-            questionNumber: "٦"
-        ),
         Question(
             id: 7,
             questionText: "اذا فزت بسباق نمل وش بيصير؟",
@@ -81,13 +67,6 @@ class GameViewModel: ObservableObject {
         ),
         // Question 8 is interactive (Question8 view)
         Question(
-            id: 8,
-            questionText: "(تفاعلي) سؤال ٨",
-            answers: ["", "", "", ""],
-            correctAnswerIndex: 0,
-            questionNumber: "٨"
-        ),
-        Question(
             id: 9,
             questionText: "النخلة",
             answers: ["سعف", "جذور", "رطب", "جذع"],
@@ -97,14 +76,7 @@ class GameViewModel: ObservableObject {
             questionFontSize: 28,
             answerFontSizes: [22, 20, 18, 24]
         ),
-        // Question 10 is interactive (Question10 view)
-        Question(
-            id: 10,
-            questionText: "(تفاعلي) سؤال ١٠",
-            answers: ["", "", "", ""],
-            correctAnswerIndex: 0,
-            questionNumber: "١٠"
-        ),
+       
         Question(
             id: 11,
             questionText: "كم عدد الموزات اللي تقدر تاكلها على معده فاضية؟",

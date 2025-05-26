@@ -22,7 +22,7 @@ struct Question45: View {
     ]
     // Adjustable background offsets
     let backgroundOffsetX: CGFloat = -1
-    let backgroundOffsetY: CGFloat = 50 // Move background 30 points down
+    let backgroundOffsetY: CGFloat = 0 // Move background 30 points down
     var onNext: () -> Void = {}
     
     var body: some View {
@@ -45,13 +45,12 @@ struct Question45: View {
                 }
             }
         }
-        .padding(.horizontal, 24)
-        .padding(.top, 32)
-        .background(
-            Image("Q45.BACKGROUND")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-        )
+        
+        
+            Image("background1")
+            .padding(.bottom, 50)
+                
+        
     }
     
     func answerText(index: Int) -> some View {
