@@ -34,11 +34,11 @@ class GameViewModel: ObservableObject {
         Question(
             id: 3,
             questionText: "وش تاسع حرف من الحروف الهجائية",
-            answers: ["هـ", "كان هذا السؤال مر علي 🤔", "ل", "ذ"],
+            answers: ["هـ", "ر", "ل", "ذ"],
             correctAnswerIndex: 0,
             questionNumber: "٣",
             questionFontSize: 28,
-            answerFontSizes: [22, 20, 18, 24]
+            answerFontSizes: [25, 25, 25, 25]
         ),
         
         // Question 5 is interactive (Question5 view)

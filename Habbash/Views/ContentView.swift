@@ -55,8 +55,22 @@ struct ContentView: View {
                                            onSkip: { viewModel.skip() },
                                            skips: $viewModel.skips
                                        ))
-                case 13:
+                case 7:
                     QuestionHostView(viewModel: viewModel, questionNumber: "٨", content: Question8(onNext: { viewModel.goToNextQuestion() }))
+                case 8:
+                    QuestionHostView(viewModel: viewModel, questionNumber: "٩", content:
+                                        UIMultContent(
+                                            question: viewModel.questions[4],
+                                           onAnswer: { idx in
+                                               if idx == question.correctAnswerIndex {
+                                                   viewModel.answer(isCorrect: true)
+                                               } else {
+                                                   viewModel.answer(isCorrect: false)
+                                               }
+                                           },
+                                           onSkip: { viewModel.skip() },
+                                           skips: $viewModel.skips
+                                       ))
                 case 9:
                     QuestionHostView(viewModel: viewModel, questionNumber: "١٠", content: Question10(onNext: { viewModel.goToNextQuestion() }))
                 case 11:
