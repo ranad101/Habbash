@@ -1,12 +1,12 @@
 import SwiftUI
 import AVFoundation
 
-struct Question12: View {
+struct Question12: View { // <-- هنا التغيير
     @State private var showClosedCat = false
     @State private var audioPlayer: AVAudioPlayer?
     @State private var skipCount = 0
     @State private var selectedIndex: Int? = nil
-    
+    @State private var pageNumber: String = "١٢"
     let answers = [
         "ميو ميو ميو",    // الصحيحة
         "ميو ميو ميو ميو",
@@ -16,13 +16,12 @@ struct Question12: View {
     let correctIndex = 0
     let questionText = "ايش قالت القطة؟"
     let questionNumber = 12
-    var onNext: () -> Void   // أضف هذا المتغير
-    
+    var onNext: () -> Void
+
     var body: some View {
-        
         VStack(spacing: 0) {
             Spacer().frame(height: 40)
-            
+
             // صورة القطة (تتغير بعد 6 ثوانٍ)
             if showClosedCat {
                 Image("catCLOSED")
@@ -46,13 +45,13 @@ struct Question12: View {
                         }
                     }
             }
-            
+
             // نص السؤال
             Text(questionText)
                 .font(.system(size: 22, weight: .bold))
                 .foregroundColor(.black)
                 .padding(.bottom, 24)
-            
+
             // الخيارات
             VStack(spacing: 20) {
                 HStack(spacing: 24) {
@@ -65,12 +64,11 @@ struct Question12: View {
                 }
             }
             .padding(.horizontal, 16)
-            
+
             Spacer()
         }
     }
-    
-    
+
     // زر خيار الإجابة (يصبح أخضر فقط إذا كانت صحيحة ومختارة)
     func answerButton(text: String, index: Int) -> some View {
         Button(action: {
@@ -85,7 +83,6 @@ struct Question12: View {
             }
         }) {
             ZStack {
-                // استخدم صورة الزر الأخضر إذا كانت الإجابة الصحيحة ومختارة
                 if selectedIndex == index && index == correctIndex {
                     Image("BUTTON.CORRECT")
                         .resizable()
@@ -101,11 +98,12 @@ struct Question12: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 8)
             }
+            .opacity(1)
         }
+        .allowsHitTesting(selectedIndex == nil)
         .buttonStyle(PlainButtonStyle())
-        .disabled(selectedIndex != nil) // يمنع الضغط بعد الاختيار
     }
-    
+
     // تشغيل صوت القطة مرة واحدة فقط
     func playMeow() {
         if let url = Bundle.main.url(forResource: "meowVoice", withExtension: "mp3") {
@@ -120,6 +118,7 @@ struct Question12: View {
         }
     }
 }
+
 #Preview {
     QuestionHostView(
         viewModel: GameViewModel(),

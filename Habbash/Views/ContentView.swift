@@ -11,6 +11,7 @@ struct ContentView: View {
         }
     }
     @StateObject var viewModel = GameViewModel()
+    @State private var didTapHostQuestionNumberAsCorrect = false
     
     var body: some View {
         switch viewModel.screen {
@@ -34,11 +35,27 @@ struct ContentView: View {
         case .question:
             if let question = viewModel.currentQuestion {
                 switch viewModel.currentQuestionIndex {
+                case 3:
+                    QuestionHostView(viewModel: viewModel, questionNumber: "٤", content: Question4(onNext: { viewModel.goToNextQuestion() }))
                 case 4:
                     QuestionHostView(viewModel: viewModel, questionNumber: "٥", content: Question5(viewModel: viewModel, onNext: { viewModel.goToNextQuestion() }))
                 case 5:
                     QuestionHostView(viewModel: viewModel, questionNumber: "٦", content: Question6(onNext: { viewModel.goToNextQuestion() }))
-                case 7:
+                case 6:
+                    QuestionHostView(viewModel: viewModel, questionNumber: "٧", content:
+                                        UIMultContent(
+                                            question: viewModel.questions[3],
+                                           onAnswer: { idx in
+                                               if idx == question.correctAnswerIndex {
+                                                   viewModel.answer(isCorrect: true)
+                                               } else {
+                                                   viewModel.answer(isCorrect: false)
+                                               }
+                                           },
+                                           onSkip: { viewModel.skip() },
+                                           skips: $viewModel.skips
+                                       ))
+                case 13:
                     QuestionHostView(viewModel: viewModel, questionNumber: "٨", content: Question8(onNext: { viewModel.goToNextQuestion() }))
                 case 9:
                     QuestionHostView(viewModel: viewModel, questionNumber: "١٠", content: Question10(onNext: { viewModel.goToNextQuestion() }))
@@ -55,7 +72,7 @@ struct ContentView: View {
                 case 21:
                     QuestionHostView(viewModel: viewModel, questionNumber: "٢٢", content: Question22(onNext: { viewModel.goToNextQuestion() }))
                 case 23:
-                    QuestionHostView(viewModel: viewModel, questionNumber: "٢٤", content: Question24(onNext: { viewModel.goToNextQuestion() }))
+                    QuestionHostView(viewModel: viewModel, questionNumber: "٢٤", content: Question24(didTapHostQuestionNumberAsCorrect: $didTapHostQuestionNumberAsCorrect, onNext: { viewModel.goToNextQuestion() }))
                 case 25:
                     QuestionHostView(viewModel: viewModel, questionNumber: "٢٦", content: Question26(onNext: { viewModel.goToNextQuestion() }))
                 case 26:
@@ -85,11 +102,15 @@ struct ContentView: View {
                 case 44:
                     QuestionHostView(viewModel: viewModel, questionNumber: "٤٥", content: Question45(viewModel: viewModel, onNext: { viewModel.goToNextQuestion() }))
                 case 47:
+
                     QuestionHostView(viewModel: viewModel, questionNumber: "٤٨", content: Question48(onNext: { viewModel.goToNextQuestion() }))
+                case 44:
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question45(viewModel: viewModel, onNext: { viewModel.goToNextQuestion() }))
                 case 48:
                     QuestionHostView(viewModel: viewModel, questionNumber: "٤٩", content: Question49(viewModel: viewModel, onNext: { viewModel.goToNextQuestion() }))
                 case 49:
                     QuestionHostView(viewModel: viewModel, questionNumber: "٥٠", content: Question50(viewModel: viewModel, onNext: { viewModel.goToNextQuestion() }))
+
                 default:
                     QuestionHostView(
                         viewModel: viewModel,

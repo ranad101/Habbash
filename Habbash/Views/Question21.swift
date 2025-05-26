@@ -150,5 +150,10 @@ struct DraggableWord: View {
 }
 
 #Preview {
-    Question21(onNext: {})
-} 
+    QuestionHostView(
+        viewModel: GameViewModel(),
+        questionNumber: "٢١",
+        content: Question21(onNext: {})
+    )
+}
+

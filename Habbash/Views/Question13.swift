@@ -21,45 +21,49 @@ struct Question13: View {
     }
 
     var body: some View {
-        VStack(spacing: 20) {
-            Spacer()
-            // Question text
-            ZStack {
-                Text("دور أصعر دائره")
-                    .font(.custom("BalooBhaijaan2-Medium", size: 24))
-                    .padding(.top, -1)
-                Button(action: {
-                    answerState = .correct
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-                        onNext()
+        GeometryReader { geo in
+            VStack(spacing: 20) {
+                Spacer().frame(height: 40)
+                // Question text + النقطة السوداء فوق العين
+                ZStack {
+                    Text("دور أصعر دائره")
+                        .font(.custom("BalooBhaijaan2-Medium", size: 24))
+                        .padding(.top, -1)
+                    // النقطة السوداء (الجواب الصحيح)
+                    Button(action: {
+                        answerState = .correct
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                            onNext()
+                        }
+                    }) {
+                        Circle()
+                            .fill(answerState == .correct ? Color.green : Color.black)
+                            .frame(width: 4, height: 7)
                     }
-                }) {
-                    Circle()
-                        .fill(answerState == .correct ? Color.green : Color.black)
-                        .frame(width: 4, height: 7)
+                    .offset(x: -3, y: -10) // <-- عدل الرقم هنا حتى تصل للمكان المثالي
                 }
-                .offset(x: -3, y: -7)
+                // الدوائر الزرقاء في منتصف الشاشة وأعلى قليلاً
+                ZStack {
+                    circleButton(index: 0)
+                        .offset(x: 100, y: 90)
+                    circleButton(index: 1)
+                        .offset(x: -100, y: -20)
+                    circleButton(index: 2)
+                        .offset(x: -90, y: 120)
+                    circleButton(index: 3)
+                        .offset(x: 50, y: -40)
+                }
+                .frame(height: geo.size.height * 0.35)
+                .frame(maxWidth: .infinity)
+                Spacer()
+                // Feedback
+                if answerState == .correct {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 50))
+                        .foregroundColor(.green)
+                }
             }
-            .padding(.bottom, 60)
-            // Circles layout
-            ZStack {
-                circleButton(index: 0)
-                    .offset(x: 100, y: 90)
-                circleButton(index: 1)
-                    .offset(x: -100, y: -20)
-                circleButton(index: 2)
-                    .offset(x: -90, y: 120)
-                circleButton(index: 3)
-                    .offset(x: 50, y: -40)
-            }
-            .frame(height: 320)
-            Spacer()
-            // Feedback
-            if answerState == .correct {
-                Image(systemName: "checkmark.circle.fill")
-                    .font(.system(size: 50))
-                    .foregroundColor(.green)
-            }
+            .frame(maxHeight: .infinity, alignment: .center)
         }
     }
 
@@ -80,5 +84,10 @@ struct Question13: View {
 }
 
 #Preview {
-    Question13(onNext: {})
-} 
+    QuestionHostView(
+        viewModel: GameViewModel(),
+        questionNumber: "١٣",
+        content: Question13(onNext: {})
+    )
+}
+

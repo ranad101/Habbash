@@ -40,15 +40,7 @@ class GameViewModel: ObservableObject {
             questionFontSize: 28,
             answerFontSizes: [22, 20, 18, 24]
         ),
-        Question(
-            id: 4,
-            questionText: "ناظر زين!!",
-            answers: ["", "", "", ""],
-            correctAnswerIndex: 3,
-            questionNumber: "٤",
-            questionFontSize: 28,
-            answerFontSizes: [22, 20, 18, 24]
-        ),
+        
         // Question 5 is interactive (Question5 view)
         // Question 6 is interactive (Question6 view)
         Question(
@@ -91,7 +83,7 @@ class GameViewModel: ObservableObject {
             questionText: "نتمنى انك كنت مركز لرقم السؤال",
             answers: ["روح لسؤال ١٧", "روح لسؤال ١٥", "روح لسؤال ١٤", "روح لسؤال ١٦"],
             correctAnswerIndex: 1,
-            questionNumber: "١٤",
+            questionNumber: "?",
             questionFontSize: 28,
             answerFontSizes: [22, 20, 18, 24]
         ),
