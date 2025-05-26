@@ -1,5 +1,37 @@
 import SwiftUI
 
+struct AnimatedRaysBackground: View {
+    @State private var animate = false
+    let rayCount = 16
+
+    var body: some View {
+        GeometryReader { geometry in
+            let width = geometry.size.width
+            let height = geometry.size.height
+            let rayLength = sqrt(width * width + height * height)
+            ZStack {
+                ForEach(0..<rayCount, id: \.self) { i in
+                    Capsule()
+                        .fill(Color.white.opacity(0.6))
+                        .frame(width: 6, height: rayLength)
+                        .scaleEffect(y: animate ? 1.1 : 0.95, anchor: .center)
+                        .opacity(animate ? 0.25 : 0.12)
+                        .rotationEffect(.degrees(Double(i) * (360.0 / Double(rayCount))))
+                        .animation(
+                            .easeInOut(duration: 1.5)
+                                .repeatForever(autoreverses: true)
+                                .delay(Double(i) * 0.05),
+                            value: animate
+                        )
+                }
+            }
+            .frame(width: width, height: height)
+            .onAppear { animate = true }
+        }
+        .ignoresSafeArea()
+    }
+}
+
 struct StartPageView: View {
     var isContinue: Bool = false
     var onStart: () -> Void
@@ -10,6 +42,7 @@ struct StartPageView: View {
     var body: some View {
         ZStack {
             Color(hex: "#FFDA43").ignoresSafeArea()
+            AnimatedRaysBackground()
             VStack(spacing: isContinue ? 24 : 48) {
                 Spacer()
                 if isContinue {
@@ -45,5 +78,5 @@ struct StartPageView: View {
 }
 
 #Preview {
-     StartPageView(isContinue: true, onStart: {}, onContinue: {})
- }
+    StartPageView(isContinue: false, onStart: {}, onContinue: {})
+}

@@ -6,7 +6,7 @@ class GameViewModel: ObservableObject {
         case splash, video1, choice, video2, video3, start, question, gameOver
     }
 
-    @Published var screen: Screen = .splash
+    @Published var screen: Screen = .question
     @Published var currentQuestionIndex: Int = 0
     @Published var hearts: Int = 3
     @Published var skips: Int = 3
