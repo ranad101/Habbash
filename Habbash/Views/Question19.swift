@@ -1,5 +1,3 @@
-
-
 import SwiftUI
 import AVFoundation
 
@@ -80,8 +78,3 @@ struct Question19: View {
         content: Question19(onNext: {})
     )
 }
-
-
-
-
-

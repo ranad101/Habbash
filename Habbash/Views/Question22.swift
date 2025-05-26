@@ -1,7 +1,9 @@
 import SwiftUI
+import AVFoundation
 
 struct Question22: View {
     @State private var selectedAnswer: Int? = nil
+    @State private var audioPlayer: AVAudioPlayer?
     
     let answers = [
         "نملوكة",
@@ -58,10 +60,12 @@ struct Question22: View {
         Button(action: {
             selectedAnswer = index
             if index == correctIndex {
-                // الانتقال للسؤال 23 بعد نصف ثانية
+                playSound(isCorrect: true)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
                     onNext()
                 }
+            } else {
+                playSound(isCorrect: false)
             }
         }) {
             ZStack {
@@ -81,6 +85,18 @@ struct Question22: View {
             }
         }
         .buttonStyle(PlainButtonStyle())
+    }
+
+    func playSound(isCorrect: Bool) {
+        let soundName = isCorrect ? "success" : "failure"
+        if let soundURL = Bundle.main.url(forResource: soundName, withExtension: "wav") {
+            do {
+                audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+                audioPlayer?.play()
+            } catch {
+                print("Error playing sound: \(error)")
+            }
+        }
     }
 }
 

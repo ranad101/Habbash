@@ -37,7 +37,7 @@ struct Question21: View {
                 camelFrames: $camelFrames,
                 camelImages: $camelImages
             )
-            .frame(height: 400)
+            .frame(height: 500)
             Spacer()
         }
     }
@@ -50,16 +50,17 @@ struct CamelsGrid: View {
 
     var body: some View {
         GeometryReader { geo in
-            VStack(spacing: 32) {
-                HStack(spacing: 32) {
+            VStack(spacing: 12) {
+                HStack(spacing: 12) {
                     camelView(index: 0, geo: geo)
                     camelView(index: 1, geo: geo)
                 }
-                HStack(spacing: 32) {
+                HStack(spacing: 12) {
                     camelView(index: 2, geo: geo)
                     camelView(index: 3, geo: geo)
                 }
             }
+            .padding(.top, -30) // رفع الجملات للأعلى قليلاً
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
@@ -68,7 +69,11 @@ struct CamelsGrid: View {
         GeometryReader { camelGeo in
             Image(camelImages[index])
                 .resizable()
-                .frame(width: 160, height: 160)
+                .frame(width: 200, height: 260)
+                .offset(
+                    x: (index == 0 || index == 2) ? 30 : 0,
+                    y: (index == 0 || index == 2) ? 35 : 0
+                )
                 .onAppear {
                     DispatchQueue.main.async {
                         camelFrames[index] = camelGeo.frame(in: .global)
@@ -80,7 +85,7 @@ struct CamelsGrid: View {
                     }
                 }
         }
-        .frame(width: 160, height: 160)
+        .frame(width: 200, height: 260)
     }
 }
 
@@ -150,5 +155,10 @@ struct DraggableWord: View {
 }
 
 #Preview {
-    Question21(onNext: {})
-} 
+    QuestionHostView(
+        viewModel: GameViewModel(),
+        questionNumber: "٢١",
+        content: Question21(onNext: {})
+    )
+}
+

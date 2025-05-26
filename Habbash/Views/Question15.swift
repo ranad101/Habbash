@@ -2,7 +2,6 @@ import SwiftUI
 
 struct Question15: View {
     @State private var phase: Int = 0 // 0: أزرق، 1: أحمر
-    @State private var showCorrect = false
     @State private var timer: Timer?
     var onNext: () -> Void
 
@@ -16,12 +15,12 @@ struct Question15: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Spacer().frame(height: 100)
-            Text("اهزم التمساح")
+            Spacer().frame(height: 40) // كان 100، الآن أقل لرفع كل شيء للأعلى
+            Text("اهزم التمساحه")
                 .font(.custom("BalooBhaijaan2-Medium", size: 26))
                 .foregroundColor(.black)
                 .padding(.bottom, 12)
-            Spacer(minLength: 50)
+            Spacer(minLength: 20) // كان 50
             HStack(alignment: .center, spacing: 24) {
                 if phase == 0 {
                     Text("ازرق")
@@ -38,19 +37,17 @@ struct Question15: View {
                     .frame(width: 150, height: 150)
             }
             .frame(maxWidth: .infinity, alignment: .center)
-            Spacer(minLength: 30)
+            .padding(.top, -20) // رفع النص والصورة للأعلى قليلاً
+            Spacer(minLength: 10) // كان 30
             HStack(spacing: 18) {
                 ForEach(0..<4) { i in
                     Button(action: {
                         if i == correctIndex {
-                            showCorrect = true
                             if phase == 1 {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-                                    onNext()
-                                }
+                                onNext()
+                            } else {
+                                phase = 1
                             }
-                        } else {
-                            showCorrect = false
                         }
                     }) {
                         Image(colorImages[i])
@@ -61,35 +58,21 @@ struct Question15: View {
                 }
             }
             .padding(.top, 8)
-            if showCorrect {
-                Text("إجابة صحيحة! 🎉")
-                    .foregroundColor(.green)
-                    .font(.custom("BalooBhaijaan2-Medium", size: 22))
-                    .padding(.top, 16)
-            }
             Spacer()
         }
         .onAppear {
-            startTimer()
+            phase = 0
         }
         .onDisappear {
             timer?.invalidate()
         }
     }
-
-    func startTimer() {
-        timer?.invalidate()
-        showCorrect = false
-        phase = 0
-        timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { _ in
-            withAnimation {
-                phase = 1
-                showCorrect = false
-            }
-        }
-    }
 }
-
+ 
 #Preview {
-    Question15(onNext: {})
-} 
+    QuestionHostView(
+        viewModel: GameViewModel(),
+        questionNumber: "١٥",
+        content: Question15(onNext: {})
+    )
+}
