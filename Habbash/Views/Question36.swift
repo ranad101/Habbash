@@ -1,4 +1,5 @@
 import SwiftUI
+import AVFoundation
 
 struct HiddenNumber {
     let value: Int
@@ -14,6 +15,7 @@ struct Question36: View {
     @State private var revealed: [Bool] = [false, false, false, false]
     @State private var showSuccess: Bool = false
     @State private var skipCount: Int = 0
+    @State private var audioPlayer: AVAudioPlayer?
     let hiddenNumbers: [HiddenNumber] = [
         HiddenNumber(value: 2, asset: "٢", position: CGPoint(x: 90, y: 50), size: CGSize(width: 70, height: 90)),
         HiddenNumber(value: 5, asset: "٥", position: CGPoint(x: 350, y: 110), size: CGSize(width: 60, height: 65)),
@@ -61,14 +63,6 @@ struct Question36: View {
                         }
                     }
                     .position(x: 212, y: 150)
-                    // Success checkmark
-                    if showSuccess {
-                        Image(systemName: "checkmark.circle.fill")
-                            .resizable()
-                            .frame(width: 48, height: 48)
-                            .foregroundColor(.green)
-                            .position(x: 212, y: 180)
-                    }
                 }
                 .padding(.vertical, 0)
 
@@ -124,12 +118,24 @@ struct Question36: View {
     func checkWin() {
         if code == correctCode {
             showSuccess = true
+            playSuccessSound()
             // الانتقال التلقائي بعد نصف ثانية
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
                 onNext()
             }
         } else {
             showSuccess = false
+        }
+    }
+
+    func playSuccessSound() {
+        if let soundURL = Bundle.main.url(forResource: "success", withExtension: "wav") {
+            do {
+                audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+                audioPlayer?.play()
+            } catch {
+                print("Error playing sound: \(error)")
+            }
         }
     }
 }
