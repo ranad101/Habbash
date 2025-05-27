@@ -41,9 +41,9 @@ struct Question24: View {
                     .frame(maxWidth: .infinity)
                     .frame(maxHeight: .infinity, alignment: .center)
 
-                    Spacer(minLength: 150)
-                    .padding(.bottom, 32)
-                    .padding(.trailing, -100)
+                    
+                    .padding(.bottom, 50)
+                    
                 }
 
                 // ⭐️ إظهار علامة الصح الكبيرة في منتصف Question24
@@ -56,6 +56,16 @@ struct Question24: View {
                         .position(x: geometry.size.width / 2, y: geometry.size.height / 2) // في المنتصف
                 }
             }
+            .overlay(
+                Button(action: {
+                    onNext()
+                }) {
+                    Color.clear
+                        .frame(width: 60, height: 60)
+                }
+                .buttonStyle(PlainButtonStyle())
+                .position(x: geometry.size.width - 24 - 21, y: -20)
+            )
         }
         .ignoresSafeArea()
     }
