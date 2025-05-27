@@ -12,10 +12,10 @@ struct Question4: View {
     var body: some View {
         GeometryReader { geo in
             VStack(spacing: 32) {
-                Spacer().frame(height: geo.size.height * 0.03) // رفع بسيط للأعلى
+                Spacer() // يجعل كل شيء في المنتصف عموديًا
 
                 Text(questionText)
-                    .font(.title2)
+                    .font(.custom("BalooBhaijaan2-Medium", size: 30))
 
                 Spacer().frame(height: 10)
 
@@ -31,13 +31,13 @@ struct Question4: View {
                     }
                 }
 
-                Spacer()
+                Spacer() // يجعل كل شيء في المنتصف عموديًا
             }
             .frame(width: geo.size.width, height: geo.size.height)
         }
         .onAppear {
             // إخفاء الألوان بعد ثانية واحدة
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 withAnimation {
                     showColors = false
                 }
@@ -56,12 +56,12 @@ struct Question4: View {
                 Image("BUTTON.REGULAR")
                     .renderingMode(.template)
                     .resizable()
-                    .frame(width: 150, height: 70) // <-- هنا التعديل
+                    .frame(width: 150, height: 70)
                     .foregroundColor(index == correctIndex ? Color.green.opacity(0.7) : Color.red.opacity(0.7))
             } else {
                 Image("BUTTON.REGULAR")
                     .resizable()
-                    .frame(width: 150, height: 70) // <-- هنا التعديل
+                    .frame(width: 150, height: 70)
             }
         }
         .buttonStyle(PlainButtonStyle())
@@ -76,4 +76,3 @@ struct Question4: View {
         content: Question4(onNext: {})
     )
 }
-

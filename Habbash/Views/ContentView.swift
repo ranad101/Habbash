@@ -1,15 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    init() {
-        print("Available fonts:")
-        for family in UIFont.familyNames.sorted() {
-            print("\nFamily: \(family)")
-            for name in UIFont.fontNames(forFamilyName: family).sorted() {
-                print("  \(name)")
-            }
-        }
-    }
+   
     @StateObject var viewModel = GameViewModel()
     @State private var didTapHostQuestionNumberAsCorrect = false
     

@@ -20,7 +20,7 @@ struct Question5: View {
                 
                 VStack {
                     // Question text
-                    Text("ابحث عن القط المختبئ")
+                    Text("مو السؤال الصح لازم تعديل")
                         .font(.system(size: 32, weight: .bold))
                         .foregroundColor(.black)
                         .padding(.top, 40)

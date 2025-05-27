@@ -82,7 +82,7 @@ struct StartPageView: View {
 
     var body: some View {
         ZStack {
-            Color(hex: "#FFDA43").ignoresSafeArea()
+            Color(hex: "#FFBF00").ignoresSafeArea()
             StarField()
             AnimatedRaysBackground()
             VStack(spacing: isContinue ? 24 : 48) {

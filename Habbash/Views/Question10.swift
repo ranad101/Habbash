@@ -26,41 +26,51 @@ struct Question10: View {
     @State private var pressingColor: Int? = nil
 
     var body: some View {
-        VStack {
-            Spacer(minLength: 40)
-            VStack(spacing: 12) {
-                rowView(row: row1, offset: 0)
-                rowView(row: row2, offset: row1.count)
-                rowView(row: row3, offset: row1.count + row2.count)
-            }
-            .padding(.horizontal, 8)
-            .environment(\.layoutDirection, .rightToLeft)
-            Spacer()
-            HStack(spacing: 8) {
-                ForEach(0..<6) { idx in
-                    Rectangle()
-                        .fill(colors[idx])
-                        .frame(width: 50, height: 80)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 4)
-                                .stroke(Color.black, lineWidth: 2)
-                        )
-                        .gesture(
-                            DragGesture(minimumDistance: 0)
-                                .onChanged { _ in
-                                    pressingColor = idx
-                                }
-                                .onEnded { _ in
-                                    pressingColor = nil
-                                }
-                        )
+        GeometryReader { geo in
+            VStack {
+                Spacer(minLength: 40)
+                VStack(spacing: 12) {
+                    rowView(row: row1, offset: 0)
+                    rowView(row: row2, offset: row1.count)
+                    rowView(row: row3, offset: row1.count + row2.count)
                 }
+                .padding(.horizontal, 8)
+                .environment(\.layoutDirection, .rightToLeft)
+                Spacer()
+                HStack(spacing: 8) {
+                    ForEach(0..<6) { idx in
+                        Rectangle()
+                            .fill(colors[idx])
+                            .frame(width: 50, height: 80)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .stroke(Color.black, lineWidth: 2)
+                            )
+                            .gesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged { _ in
+                                        pressingColor = idx
+                                    }
+                                    .onEnded { _ in
+                                        pressingColor = nil
+                                    }
+                            )
+                    }
+                }
+                .padding(.bottom, 40)
             }
-            .padding(.bottom, 40)
-            Button("التالي") {
-                onNext()
-            }
-            .padding(.top, 16)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .overlay(
+                Button(action: {
+                    onNext()
+                    // Play success voice here
+                }) {
+                    Color.clear // Red for debugging
+                        .frame(width: 60, height: 60)
+                }
+                .buttonStyle(PlainButtonStyle())
+                .position(x: 38, y: -95)
+            )
         }
     }
 
@@ -85,5 +95,9 @@ struct Question10: View {
 }
 
 #Preview {
-    Question10(onNext: {})
+    QuestionHostView(
+        viewModel: GameViewModel(),
+        questionNumber: "١٠",
+        content: Question10(onNext: {})
+    )
 }

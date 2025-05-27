@@ -8,12 +8,12 @@ struct Question8: View {
     @State private var pageNumber: String = "٨"
     var onNext: () -> Void
 
-    let letters = ["م", "و", "ز"]
+    let letters = ["ت", "م", "ر"]
     let options: [(first: String, rest: String)] = [
-        ("م", "ثو"),
-        ("ز", "كر"),
-        ("و", "بير"),
-        ("ت", "ين")
+        ("ة", "موز"),
+        ("ر", "جز"),
+        ("م", "برقوق الشا"),
+        ("خ", "وخ")
     ]
     let letterPositions: [CGSize] = [
         CGSize(width: 20, height: -40),
@@ -31,7 +31,7 @@ struct Question8: View {
 
             HStack(alignment: .center, spacing: 0) {
                 ZStack {
-                    Image("bannana")
+                    Image("DATES")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 300, height: 300)
@@ -43,6 +43,7 @@ struct Question8: View {
                     }
                 }
                 .padding(.leading, 40)
+                .offset(x: -25) // <-- هنا التعديل لتحريك التمرة فقط لليسار
 
                 Spacer(minLength: 0)
 
@@ -51,7 +52,7 @@ struct Question8: View {
                         ZStack {
                             Image("BUTTON.REGULAR")
                                 .resizable()
-                                .frame(width: 140, height: 60)
+                                .frame(width: 180, height: 60)
                             HStack(spacing: 0) {
                                 if idx == 3 {
                                     Button(action: {
@@ -85,7 +86,7 @@ struct Question8: View {
                 }
                 .padding(.trailing, 70)
                 .padding(.leading, -30)
-                .offset(x: -20)
+                .offset(x: -40)
             }
             .padding(.top, 8)
 
@@ -113,7 +114,7 @@ struct Question8: View {
 
     func handleOptionTap(_ char: String) {
         let currentLetter = letters[answerStep]
-        if char == currentLetter {
+        if char == currentLetter || (answerStep == 0 && char == "ة" && currentLetter == "ت") {
             if answerStep == 2 {
                 showCorrect = true
                 answerStep += 1
@@ -144,4 +145,3 @@ struct Question8: View {
         content: Question8(onNext: {})
     )
 }
-

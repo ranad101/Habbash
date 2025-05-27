@@ -16,7 +16,7 @@ struct Question15: View {
     var body: some View {
         VStack(spacing: 0) {
             Spacer().frame(height: 40) // كان 100، الآن أقل لرفع كل شيء للأعلى
-            Text("اهزم التمساح")
+            Text("اهزم التمساحه")
                 .font(.custom("BalooBhaijaan2-Medium", size: 26))
                 .foregroundColor(.black)
                 .padding(.bottom, 12)

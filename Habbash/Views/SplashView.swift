@@ -8,7 +8,7 @@ struct SplashView: View {
     
     var body: some View {
         ZStack {
-            Color(hex: "#FFDA43")
+            Color(hex: "#FFBF00")
                 .ignoresSafeArea()
             VStack(spacing: 0) {
                 Spacer()
