@@ -7,7 +7,7 @@ import SwiftUI
 
 // MARK: - Game ViewModel
 class GameViewModel: ObservableObject {
-    enum Screen { case splash, video1, choice, video2, video3, start, question, gameOver }
+    enum Screen { case splash, video1, choice, video2, video3, start, question, gameOver, finalVideo }
 
     @Published var screen: Screen = .start
     @Published var currentQuestionIndex: Int = 0
@@ -150,7 +150,7 @@ class GameViewModel: ObservableObject {
         44: { onNext in AnyView(Question45(viewModel: self, onNext: onNext)) },
         47: { onNext in AnyView(Question48(onNext: onNext)) },
         48: { onNext in AnyView(Question49(viewModel: self, onNext: onNext)) },
-        49: { onNext in AnyView(Question50(viewModel: self, onNext: onNext)) }
+        49: { onNext in AnyView(Question50(onNext: onNext)) }
     ]
 
     // Return interactive page if exists
@@ -169,7 +169,14 @@ class GameViewModel: ObservableObject {
     }
     func skip() { if skips>0 { skips -= 1; next() } }
     func next() {
-        if currentQuestionIndex+1 < questions.count { currentQuestionIndex += 1 }
+        if currentQuestionIndex+1 < questions.count {
+            currentQuestionIndex += 1
+            // If we just finished question 50, go to final video
+            if currentQuestionIndex == 50 {
+                screen = .finalVideo
+                return
+            }
+        }
         else { screen = .gameOver }
     }
     func resetGame() { hearts = 3; skips = 3; currentQuestionIndex = 0; screen = .start }
@@ -180,4 +187,5 @@ class GameViewModel: ObservableObject {
     func goToVideo2() { screen = .video2 }
     func goToVideo3() { screen = .video3 }
     func goToStart()  { screen = .start }
+    func goToFinalVideo() { screen = .finalVideo }
 }

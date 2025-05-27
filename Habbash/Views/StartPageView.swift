@@ -82,7 +82,7 @@ struct StartPageView: View {
 
     var body: some View {
         ZStack {
-            Color(hex: "#FFBF00").ignoresSafeArea()
+            Color(hex: "#FFDA43").ignoresSafeArea()
             StarField()
             AnimatedRaysBackground()
             VStack(spacing: isContinue ? 24 : 48) {
@@ -118,5 +118,9 @@ struct StartPageView: View {
 }
 
 #Preview {
-    StartPageView(isContinue: false, onStart: {}, onContinue: {})
+    StartPageView(
+        isContinue: true,
+        onStart: { print("Restart from beginning") },
+        onContinue: { print("Continue game") }
+    )
 }

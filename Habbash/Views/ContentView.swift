@@ -88,7 +88,7 @@ struct ContentView: View {
                 case 48:
                     QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question49(viewModel: viewModel, onNext: { viewModel.next() }))
                 case 49:
-                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question50(viewModel: viewModel, onNext: { viewModel.next() }))
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question50(onNext: { viewModel.next() }))
                 default:
                     QuestionHostView(
                         viewModel: viewModel,
@@ -109,6 +109,15 @@ struct ContentView: View {
                 }
             } else {
                 Text("انتهت الأسئلة!")
+            }
+        case .finalVideo:
+            VStack {
+                Spacer()
+                Text("🎬 النهاية! هذا الفيديو النهائي")
+                    .font(.largeTitle)
+                    .foregroundColor(.blue)
+                    .multilineTextAlignment(.center)
+                Spacer()
             }
         }
     }
