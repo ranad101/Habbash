@@ -1,5 +1,5 @@
 import SwiftUI
-
+import SwiftData
 struct Question38: View {
     @State private var pencilState: PencilState = .unsharpened
     @State private var pencilOffset: CGSize = .zero
@@ -143,9 +143,14 @@ struct DraggableItem: View {
 }
 
 #Preview {
+    let container = try! ModelContainer(for: UserProgress.self, configurations: .init(isStoredInMemoryOnly: true))
+    let context = ModelContext(container)
+    let userProgress = UserProgress()
+       let viewModel = GameViewModel(modelContext: context, userProgress: userProgress)
     QuestionHostView(
-        viewModel: GameViewModel(),
+        viewModel: viewModel,
         questionNumber: "٣٨",
         content: Question38(onNext: {})
     )
+    .environment(\.modelContext, context)
 }

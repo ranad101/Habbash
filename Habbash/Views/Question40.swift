@@ -1,5 +1,5 @@
 import SwiftUI
-
+import SwiftData
 struct Question40: View {
     var body: some View {
         VStack(spacing: 32) {

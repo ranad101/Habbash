@@ -88,9 +88,11 @@ struct StartPageView: View {
             VStack(spacing: isContinue ? 24 : 48) {
                 Spacer()
                 if isContinue {
-                    Image("continue.button")
-                        .resizable()
-                        .frame(width: 307,height: 301)
+                    Button(action: { onContinue() }) {
+                        Image("continue.button")
+                            .resizable()
+                            .frame(width: 307,height: 301)
+                    }
                     Button(action: { showRestartAlert = true }) {
                         Image("start.small")
                             .resizable()

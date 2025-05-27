@@ -1,6 +1,6 @@
 import SwiftUI
 import AVFAudio
-
+import SwiftData
 struct Question27: View {
     let answers: [String] // ٤ خيارات مع خيار صورة
     @State private var audioPlayer: AVAudioPlayer?
@@ -36,6 +36,11 @@ struct Question27: View {
         Button {
             selectedAnswer = index
             playSound(for: index == correctIndex)
+            if index == correctIndex {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                    onNext()
+                }
+            }
         } label: {
             ZStack {
                 Image(selectedAnswer == index && index == correctIndex ? "BUTTON.CORRECT" : "BUTTON.REGULAR")
@@ -55,6 +60,11 @@ struct Question27: View {
         Button {
             selectedAnswer = index
             playSound(for: index == correctIndex)
+            if index == correctIndex {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                    onNext()
+                }
+            }
         } label: {
             ZStack {
                 Image(selectedAnswer == index && index == correctIndex ? "BUTTON.CORRECT" : "BUTTON.REGULAR")
@@ -86,13 +96,18 @@ struct Question27: View {
 }
 
 #Preview {
+    let container = try! ModelContainer(for: UserProgress.self, configurations: .init(isStoredInMemoryOnly: true))
+    let context = ModelContext(container)
+    let userProgress = UserProgress()
+       let viewModel = GameViewModel(modelContext: context, userProgress: userProgress)
     QuestionHostView(
-        viewModel: GameViewModel(),
+        viewModel: viewModel,
         questionNumber: "٢٨",
         content: Question27(
             answers: ["القمر", "", "الشمس", "زحل"],
             onNext: {}
         )
     )
+    .environment(\.modelContext, context)
 }
 

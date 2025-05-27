@@ -6,6 +6,7 @@
 
 
 import SwiftUI
+import SwiftData
 
 extension Font {
     static func balooBhaijaan2(size: CGFloat) -> Font {
@@ -20,5 +21,6 @@ struct HabbashApp: App {
             ContentView()
                 .font(.custom("BalooBhaijaan2-Medium", size: 20))
         }
+        .modelContainer(for: [UserProgress.self])
     }
 }

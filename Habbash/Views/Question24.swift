@@ -1,5 +1,6 @@
 import SwiftUI
 import AVFoundation
+import SwiftData
 
 struct Question24: View {
     @State private var skipCount = 0
@@ -113,9 +114,14 @@ struct Question24: View {
 
 
 #Preview {
-    QuestionHostView(
-        viewModel: GameViewModel(),
+    let container = try! ModelContainer(for: UserProgress.self, configurations: .init(isStoredInMemoryOnly: true))
+    let context = ModelContext(container)
+    let userProgress = UserProgress()
+        let viewModel = GameViewModel(modelContext: context, userProgress: userProgress)
+        QuestionHostView(
+        viewModel: viewModel,
         questionNumber: "٢٤",
         content: Question24(didTapHostQuestionNumberAsCorrect: .constant(false), onNext: {})
     )
+    .environment(\.modelContext, context)
 }

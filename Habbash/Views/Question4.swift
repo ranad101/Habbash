@@ -1,5 +1,5 @@
 import SwiftUI
-
+import SwiftData
 struct Question4: View {
     @State private var showColors = true
     var onNext: () -> Void
@@ -70,9 +70,14 @@ struct Question4: View {
 }
 
 #Preview {
+    let container = try! ModelContainer(for: UserProgress.self, configurations: .init(isStoredInMemoryOnly: true))
+    let context = ModelContext(container)
+    let userProgress = UserProgress()
+    let viewModel = GameViewModel(modelContext: context, userProgress: userProgress)
     QuestionHostView(
-        viewModel: GameViewModel(),
+        viewModel: viewModel,
         questionNumber: "٤",
         content: Question4(onNext: {})
     )
+    .environment(\.modelContext, context)
 }

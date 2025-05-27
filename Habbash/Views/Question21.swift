@@ -1,5 +1,5 @@
 import SwiftUI
-
+import SwiftData
 struct Question21: View {
     @State private var droppedIndex: Int? = nil
     @State private var dragOffset: CGSize = .zero
@@ -155,10 +155,15 @@ struct DraggableWord: View {
 }
 
 #Preview {
+    let container = try! ModelContainer(for: UserProgress.self, configurations: .init(isStoredInMemoryOnly: true))
+    let context = ModelContext(container)
+    let userProgress = UserProgress()
+       let viewModel = GameViewModel(modelContext: context, userProgress: userProgress)
     QuestionHostView(
-        viewModel: GameViewModel(),
+        viewModel: viewModel,
         questionNumber: "٢١",
         content: Question21(onNext: {})
     )
+    .environment(\.modelContext, context)
 }
 

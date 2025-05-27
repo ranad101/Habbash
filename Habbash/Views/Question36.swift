@@ -1,5 +1,6 @@
 import SwiftUI
 import AVFoundation
+import SwiftData
 
 struct HiddenNumber {
     let value: Int
@@ -141,9 +142,14 @@ struct Question36: View {
 }
 
 #Preview {
-    QuestionHostView(
-        viewModel: GameViewModel(),
+    let container = try! ModelContainer(for: UserProgress.self, configurations: .init(isStoredInMemoryOnly: true))
+    let context = ModelContext(container)
+    let userProgress = UserProgress()
+        let viewModel = GameViewModel(modelContext: context, userProgress: userProgress)
+        QuestionHostView(
+        viewModel: viewModel,
         questionNumber: "٣٦",
         content: Question36(onNext: {})
     )
+    .environment(\.modelContext, context)
 } 

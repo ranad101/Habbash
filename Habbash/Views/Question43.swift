@@ -1,5 +1,5 @@
 import SwiftUI
-
+import SwiftData
 struct Question43: View {
     @State private var countdown: Int = 6
     @State private var bombScale: CGFloat = 1.0
@@ -167,9 +167,14 @@ struct Question43: View {
 }
 
 #Preview {
+    let container = try! ModelContainer(for: UserProgress.self, configurations: .init(isStoredInMemoryOnly: true))
+    let context = ModelContext(container)
+    let userProgress = UserProgress()
+       let viewModel = GameViewModel(modelContext: context, userProgress: userProgress)
     QuestionHostView(
-        viewModel: GameViewModel(),
+        viewModel: viewModel,
         questionNumber: "٤٣",
-        content: Question43(viewModel: GameViewModel(), onNext: {})
+        content: Question43(viewModel: viewModel, onNext: {})
     )
+    .environment(\.modelContext, context)
 }

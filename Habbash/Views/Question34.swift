@@ -1,5 +1,6 @@
 import SwiftUI
 import AVFoundation
+import SwiftData
 
 struct Question34: View {
     @State private var selectedCircles: Set<Int> = []
@@ -102,9 +103,14 @@ struct Question34: View {
 }
 
 #Preview {
-    QuestionHostView(
-        viewModel: GameViewModel(),
+    let container = try! ModelContainer(for: UserProgress.self, configurations: .init(isStoredInMemoryOnly: true))
+    let context = ModelContext(container)
+    let userProgress = UserProgress()
+        let viewModel = GameViewModel(modelContext: context, userProgress: userProgress)
+        QuestionHostView(
+        viewModel: viewModel,
         questionNumber: "٣٤",
         content: Question34(onNext: {})
     )
+    .environment(\.modelContext, context)
 }

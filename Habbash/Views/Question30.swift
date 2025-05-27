@@ -1,6 +1,6 @@
 import SwiftUI
 import AVFoundation
-
+import SwiftData
 struct Question30: View {
     @State private var answer: String = ""
     @State private var isCorrect = false
@@ -98,9 +98,14 @@ struct Question30: View {
 }
 
 #Preview {
+    let container = try! ModelContainer(for: UserProgress.self, configurations: .init(isStoredInMemoryOnly: true))
+    let context = ModelContext(container)
+    let userProgress = UserProgress()
+       let viewModel = GameViewModel(modelContext: context, userProgress: userProgress)
     QuestionHostView(
-        viewModel: GameViewModel(),
-        questionNumber: "٢٨",
+        viewModel: viewModel,
+        questionNumber: "٣٠",
         content: Question30(onNext: {})
     )
+    .environment(\.modelContext, context)
 }

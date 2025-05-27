@@ -1,6 +1,6 @@
 import SwiftUI
 import AVFoundation
-
+import SwiftData
 struct Question31: View {
     @State private var offset = CGSize.zero
     @State private var isDroppedOverAnimals = false
@@ -126,9 +126,14 @@ struct Question31: View {
 
 
 #Preview {
+    let container = try! ModelContainer(for: UserProgress.self, configurations: .init(isStoredInMemoryOnly: true))
+    let context = ModelContext(container)
+    let userProgress = UserProgress()
+       let viewModel = GameViewModel(modelContext: context, userProgress: userProgress)
     QuestionHostView(
-        viewModel: GameViewModel(),
+        viewModel: viewModel,
         questionNumber: "٣١",
         content: Question31(onNext: {})
     )
+    .environment(\.modelContext, context)
 }

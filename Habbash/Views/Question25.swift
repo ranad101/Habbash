@@ -1,5 +1,5 @@
 import SwiftUI
-
+import SwiftData
 struct Question25: View {
     @State private var initialPositions: [CGPoint] = [
         CGPoint(x: 0.25, y: 0.15), // ROCK
@@ -117,9 +117,14 @@ struct Question25: View {
 }
 
 #Preview {
+    let container = try! ModelContainer(for: UserProgress.self, configurations: .init(isStoredInMemoryOnly: true))
+    let context = ModelContext(container)
+    let userProgress = UserProgress()
+       let viewModel = GameViewModel(modelContext: context, userProgress: userProgress)
     QuestionHostView(
-        viewModel: GameViewModel(),
+        viewModel: viewModel,
         questionNumber: "٢٥",
         content: Question25(onNext: {})
     )
+    .environment(\.modelContext, context)
 } 

@@ -1,5 +1,5 @@
 import SwiftUI
-
+import SwiftData
 struct Question15: View {
     @State private var phase: Int = 0 // 0: أزرق، 1: أحمر
     @State private var timer: Timer?
@@ -70,9 +70,14 @@ struct Question15: View {
 }
  
 #Preview {
+    let container = try! ModelContainer(for: UserProgress.self, configurations: .init(isStoredInMemoryOnly: true))
+    let context = ModelContext(container)
+    let userProgress = UserProgress()
+        let viewModel = GameViewModel(modelContext: context, userProgress: userProgress)
     QuestionHostView(
-        viewModel: GameViewModel(),
+        viewModel: viewModel,
         questionNumber: "١٥",
         content: Question15(onNext: {})
     )
+    .environment(\.modelContext, context)
 }

@@ -1,5 +1,5 @@
 import SwiftUI
-
+import SwiftData
 struct Question17: View {
     @State private var countdown: Int = 6
     @State private var bombScale: CGFloat = 1.0

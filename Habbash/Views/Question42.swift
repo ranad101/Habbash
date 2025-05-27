@@ -2,7 +2,7 @@ import SwiftUI
 import Combine
 import CoreGraphics
 import AVFoundation
-
+import SwiftData
 struct Question42: View {
 
     @State private var hourAngle: Double = 0
@@ -162,10 +162,15 @@ struct Question42: View {
 
 
 #Preview {
+    let container = try! ModelContainer(for: UserProgress.self, configurations: .init(isStoredInMemoryOnly: true))
+    let context = ModelContext(container)
+    let userProgress = UserProgress()
+       let viewModel = GameViewModel(modelContext: context, userProgress: userProgress)
     QuestionHostView(
-        viewModel: GameViewModel(),
+        viewModel: viewModel,
         questionNumber: "٤٢",
         content: Question42(onNext: {})
     )
+    .environment(\.modelContext, context)
 }
 

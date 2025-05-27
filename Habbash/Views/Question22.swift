@@ -1,6 +1,6 @@
 import SwiftUI
 import AVFoundation
-
+import SwiftData
 struct Question22: View {
     @State private var selectedAnswer: Int? = nil
     @State private var audioPlayer: AVAudioPlayer?
@@ -101,9 +101,14 @@ struct Question22: View {
 }
 
 #Preview {
+    let container = try! ModelContainer(for: UserProgress.self, configurations: .init(isStoredInMemoryOnly: true))
+    let context = ModelContext(container)
+    let userProgress = UserProgress()
+       let viewModel = GameViewModel(modelContext: context, userProgress: userProgress)
     QuestionHostView(
-        viewModel: GameViewModel(),
+        viewModel: viewModel,
         questionNumber: "٢٢",
         content: Question22(onNext: {})
     )
+    .environment(\.modelContext, context)
 } 

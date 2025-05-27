@@ -2,6 +2,7 @@
 // Combined for drop‑in integration
 
 import SwiftUI
+import SwiftData
 
 // MARK: - Question Model
 
@@ -9,10 +10,16 @@ import SwiftUI
 class GameViewModel: ObservableObject {
     enum Screen { case splash, video1, choice, video2, video3, start, question, gameOver, finalVideo }
 
-    @Published var screen: Screen = .start
+    @Published var screen: Screen = .splash
     @Published var currentQuestionIndex: Int = 0
     @Published var hearts: Int = 3
     @Published var skips: Int = 3
+    @Published var userProgress: UserProgress
+    var hasSeenIntroVideos: Bool {
+        get { userProgress.hasSeenIntroVideos }
+        set { userProgress.hasSeenIntroVideos = newValue; try? modelContext.save() }
+    }
+    @Environment(\.modelContext) var modelContext
 
     // Full 50‑step sequence with MCQ placeholders and interactive placeholders
     @Published var questions: [Question] = [
@@ -163,14 +170,34 @@ class GameViewModel: ObservableObject {
     }
 
     // MARK: - Game control
-    func startGame() { hearts = 3; skips = 3; currentQuestionIndex = 0; screen = .question }
-    func answer(isCorrect: Bool) {
-        if isCorrect { next() } else { hearts -= 1; if hearts == 0 { screen = .gameOver } }
+    func startGame() {
+        hearts = 3
+        skips = 3
+        currentQuestionIndex = 0
+        userProgress.currentQuestion = 0
+        userProgress.hearts = 3
+        userProgress.skips = 3
+        try? modelContext.save()
+        screen = .question
     }
-    func skip() { if skips>0 { skips -= 1; next() } }
+    func answer(isCorrect: Bool) {
+        if isCorrect { next() } else {
+            hearts -= 1
+            userProgress.hearts = hearts
+            try? modelContext.save()
+            if hearts == 0 { screen = .gameOver }
+        }
+    }
+    func skip() { if skips>0 {
+        skips -= 1
+        userProgress.skips = skips
+        try? modelContext.save()
+        next() } }
     func next() {
         if currentQuestionIndex+1 < questions.count {
             currentQuestionIndex += 1
+            userProgress.currentQuestion = currentQuestionIndex
+            try? modelContext.save()
             // If we just finished question 50, go to final video
             if currentQuestionIndex == 50 {
                 screen = .finalVideo
@@ -186,6 +213,27 @@ class GameViewModel: ObservableObject {
     func goToChoice() { screen = .choice }
     func goToVideo2() { screen = .video2 }
     func goToVideo3() { screen = .video3 }
-    func goToStart()  { screen = .start }
+    func goToStart() {
+        if hasSeenIntroVideos {
+            screen = .start
+        } else {
+            screen = .video1
+        }
+    }
     func goToFinalVideo() { screen = .finalVideo }
+
+    init(modelContext: ModelContext, userProgress: UserProgress) {
+        self.userProgress = userProgress
+        self.currentQuestionIndex = userProgress.currentQuestion
+        self.hearts = userProgress.hearts
+        self.skips = userProgress.skips
+    }
+
+    func continueGame() {
+        self.hearts = userProgress.hearts
+        self.skips = userProgress.skips
+        self.currentQuestionIndex = userProgress.currentQuestion
+        self.screen = .question
+    }
 }
+

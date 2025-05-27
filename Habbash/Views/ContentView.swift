@@ -1,14 +1,41 @@
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
    
-    @StateObject var viewModel = GameViewModel()
+    @Environment(\.modelContext) var modelContext
+    @StateObject var viewModel: GameViewModel
     @State private var didTapHostQuestionNumberAsCorrect = false
+    
+    init() {
+        do {
+            let container = try ModelContainer(for: UserProgress.self)
+            let context = ModelContext(container)
+            let fetchDescriptor = FetchDescriptor<UserProgress>()
+            if let existing = try? context.fetch(fetchDescriptor).first {
+                _viewModel = StateObject(wrappedValue: GameViewModel(modelContext: context, userProgress: existing))
+            } else {
+                let newProgress = UserProgress()
+                context.insert(newProgress)
+                _viewModel = StateObject(wrappedValue: GameViewModel(modelContext: context, userProgress: newProgress))
+            }
+            // Ensure the initial screen is splash
+            _viewModel.wrappedValue.screen = .splash
+        } catch {
+            fatalError("Failed to create ModelContainer: \(error)")
+        }
+    }
     
     var body: some View {
         switch viewModel.screen {
         case .splash:
-            SplashView(onFinish: { viewModel.goToVideo1() })
+            SplashView(onFinish: {
+                if viewModel.hasSeenIntroVideos {
+                    viewModel.goToStart()
+                } else {
+                    viewModel.goToVideo1()
+                }
+            })
         case .video1:
             VideoView(videoName: "video1", onFinish: { viewModel.goToChoice() })
         case .choice:
@@ -17,13 +44,29 @@ struct ContentView: View {
                 onOption2: { viewModel.goToVideo3() }
             )
         case .video2:
-            VideoView(videoName: "video2", onFinish: { viewModel.goToStart() })
+            VideoView(videoName: "video2", onFinish: {
+                viewModel.hasSeenIntroVideos = true
+                viewModel.goToStart()
+            })
         case .video3:
-            VideoView(videoName: "video3", onFinish: { viewModel.goToStart() })
+            VideoView(videoName: "video3", onFinish: {
+                viewModel.hasSeenIntroVideos = true
+                viewModel.goToStart()
+            })
         case .start:
-            StartPageView(onStart: { viewModel.startGame() })
+            StartPageView(
+                isContinue: viewModel.userProgress.currentQuestion > 0 && viewModel.userProgress.hearts > 0,
+                onStart: { viewModel.startGame() },
+                onContinue: { viewModel.continueGame() }
+            )
         case .gameOver:
-            GameOverView(onRestart: { viewModel.resetGame() })
+            GameOverView(onRestart: {
+                viewModel.userProgress.currentQuestion = 0
+                viewModel.userProgress.hearts = 3
+                viewModel.userProgress.skips = 3
+                try? viewModel.modelContext.save()
+                viewModel.resetGame()
+            })
         case .question:
             if let question = viewModel.currentQuestion {
                 switch viewModel.currentQuestionIndex {
@@ -58,7 +101,7 @@ struct ContentView: View {
                 case 25:
                     QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question26(onNext: { viewModel.next() }))
                 case 26:
-                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question27(answers: ["", "طيارة", "سيارة", "دراجة"], onNext: { viewModel.next() }))
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question27(answers: ["القمر", "", "الشمس", "زحل"], onNext: { viewModel.next() }))
                 case 27:
                     QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question28(onNext: { viewModel.next() }))
                 case 29:

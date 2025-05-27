@@ -1,5 +1,5 @@
 import SwiftUI
-
+import SwiftData
 struct Question6: View {
     @State private var offset1: CGSize = .zero
     @State private var offset2: CGSize = .zero
@@ -138,11 +138,16 @@ struct Question6: View {
 
 
 #Preview {
+    let container = try! ModelContainer(for: UserProgress.self, configurations: .init(isStoredInMemoryOnly: true))
+    let context = ModelContext(container)
+    let userProgress = UserProgress()
+       let viewModel = GameViewModel(modelContext: context, userProgress: userProgress)
     QuestionHostView(
-        viewModel: GameViewModel(),
+        viewModel: viewModel,
         questionNumber: "٦",
         content: Question6(onNext: {})
     )
+    .environment(\.modelContext, context)
 }
 
 
