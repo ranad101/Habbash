@@ -71,6 +71,50 @@ struct Question10: View {
                 .buttonStyle(PlainButtonStyle())
                 .position(x: 38, y: -95)
             )
+            ZStack {
+                VStack {
+                    Spacer(minLength: 40)
+                    VStack(spacing: 12) {
+                        rowView(row: row1, offset: 0)
+                        rowView(row: row2, offset: row1.count)
+                        rowView(row: row3, offset: row1.count + row2.count)
+                    }
+                    .padding(.horizontal, 8)
+                    .environment(\.layoutDirection, .rightToLeft)
+                    Spacer()
+                    HStack(spacing: 8) {
+                        ForEach(0..<6) { idx in
+                            Rectangle()
+                                .fill(colors[idx])
+                                .frame(width: 50, height: 80)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .stroke(Color.black, lineWidth: 2)
+                                )
+                                .gesture(
+                                    DragGesture(minimumDistance: 0)
+                                        .onChanged { _ in
+                                            pressingColor = idx
+                                        }
+                                        .onEnded { _ in
+                                            pressingColor = nil
+                                        }
+                                )
+                        }
+                    }
+                    .padding(.bottom, 40)
+                }
+                // Overlay button exactly over the home button
+                Button(action: {
+                    onNext()
+                }) {
+                    Color.white.opacity(0.1) // Use red for debugging, change to .clear when done
+                        .frame(width: 70, height: 70)
+                }
+                .buttonStyle(PlainButtonStyle())
+                .position(x: 16 + 22, y: -90) // 22 is half of 44
+                .zIndex(100) // Ensure it's on top
+            }
         }
     }
 

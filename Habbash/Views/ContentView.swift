@@ -44,9 +44,13 @@ struct ContentView: View {
                 case 14:
                     QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question15(onNext: { viewModel.next() }))
                 case 16:
-                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question17(viewModel: viewModel, onNext: { viewModel.next() }))
+                    QuestionHostView(
+                        viewModel: viewModel,
+                        questionNumber: question.questionNumber,
+                        content: Question17(onNext: { viewModel.next() })
+                    )
                 case 18:
-                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question49(viewModel: viewModel, onNext: { viewModel.next() }))
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question19(onNext: { viewModel.next() }))
                 case 20:
                     QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question21(onNext: { viewModel.next() }))
                 case 21:
@@ -110,19 +114,13 @@ struct ContentView: View {
             } else {
                 Text("انتهت الأسئلة!")
             }
-        case .finalVideo:
-                    VStack {
-                        Spacer()
-                        Text("🎬 النهاية! هذا الفيديو النهائي")
-                            .font(.largeTitle)
-                            .foregroundColor(.blue)
-                            .multilineTextAlignment(.center)
-                        Spacer()
-                    }
-                }
-            }
+        default:
+            // أي حالة أخرى غير مغطاة
+            Text("شاشة غير معروفة")
         }
+    }
+}
 
-        #Preview {
-            ContentView()
-        }
+#Preview {
+    ContentView()
+}

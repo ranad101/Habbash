@@ -11,27 +11,27 @@ struct Question48: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                VStack(spacing: 0) {
+                VStack() {
                     Spacer(minLength: 0)
                     // Question text
                     Text("ساعد الولد يروح الحمام")
                         .font(.custom("BalooBhaijaan2-Medium", size: 32))
                         .foregroundColor(.black)
                         .multilineTextAlignment(.center)
-                        .padding(.bottom, -50)
-                        .padding(.top, 40)
+                        .padding(.bottom, 40)
+                        .padding(.top, 10)
                     // Door and skirt interaction
                     ZStack {
                         Image("door")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 400, height: 400)
+                            .frame(width: 350, height: 350)
                         Image("rectan")
                             .resizable()
                             .scaledToFit()
                             .frame(width: 20, height: 10)
-                            .padding(.top, -121)
-                            .padding(.horizontal, -69)
+                            .padding(.top, -167)
+                            .padding(.horizontal, -55)
                             .position(x: skirtPosition.width, y: skirtPosition.height)
                             .gesture(
                                 DragGesture()
@@ -67,19 +67,16 @@ struct Question48: View {
                 }
                 // Feedback overlay
                 if showFeedback {
-                    ZStack {
-                        Color.black.opacity(0.3).ignoresSafeArea()
-                        Image(systemName: isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
-                            .font(.system(size: 120))
-                            .foregroundColor(isCorrect ? .green : .red)
-                    }
                 }
             }
         }
         .ignoresSafeArea()
     }
 }
-
 #Preview {
-    Question48()
-} 
+    QuestionHostView(
+        viewModel: GameViewModel(),
+        questionNumber: "٤٩",
+        content: Question48(onNext: {})
+    )
+}

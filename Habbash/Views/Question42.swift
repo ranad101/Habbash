@@ -93,7 +93,7 @@ struct Question42: View {
 
                 if hasAttempted {
                     if isCorrect {
-                        Image(systemName: "checkmark.circle.fill")
+                        Image(systemName: "go")
                             .foregroundColor(.green)
                             .font(.largeTitle)
                             .padding()
@@ -113,39 +113,31 @@ struct Question42: View {
                 Spacer()
             }
         }
-        .alert(isPresented: $showAlert) {
-            Alert(title: Text(isCorrect ? "نجاح" : "خطأ"),
-                  message: Text(alertMessage),
-                  dismissButton: .default(Text("حسناً")))
-        }
+      
     }
 
     func checkAnswer() {
-        let requiredHour = 12
-
         var normalizedAngle = hourAngle.truncatingRemainder(dividingBy: 360)
         if normalizedAngle < 0 {
             normalizedAngle += 360
         }
 
-        let selectedHour = Int((normalizedAngle / 30).rounded()) % 12
-        let selectedHourAdjusted = selectedHour == 0 ? 12 : selectedHour
+        let adjustedAngle = (normalizedAngle + 15).truncatingRemainder(dividingBy: 360)
+        var selectedHour = Int(adjustedAngle / 30) + 1
+        if selectedHour > 12 { selectedHour = selectedHour % 12 }
 
-        let isClose = abs(selectedHourAdjusted - requiredHour) <= 1 || abs(selectedHourAdjusted - requiredHour) >= 11
-
-        if isClose {
+        if selectedHour >= 6 && selectedHour <= 12 {
             isCorrect = true
-            imageName = "go"
-            alertMessage = "أحسنت! تم إرجاع الوقت."
-            showAlert = true
-            playSound(for: true)
+            imageName = "go"  // غير الصورة للنجاح
         } else {
             isCorrect = false
-            alertMessage = "حاول مرة أخرى."
-            showAlert = true
-            playSound(for: false)
+            imageName = "red"    // صورة الخطأ أو الأصلية
         }
+
+        showAlert = true
+        playSound(for: isCorrect)
     }
+
 
     func playSound(for correct: Bool) {
         let soundName = correct ? "success" : "failure"
