@@ -12,7 +12,7 @@ struct Question31: View {
 
     var body: some View {
         GeometryReader { geo in
-            VStack(spacing: 120) {
+            VStack(spacing: 110) {
                 HStack() {
                     Text("السؤال")
                         .font(.title2)
@@ -26,7 +26,7 @@ struct Question31: View {
                                     let newY = value.translation.height
 
                                     // تقييد الحركة أفقياً داخل عرض الشاشة تقريباً
-                                    if abs(newX) < geo.size.width / 2 {
+                                    if abs(newX) < geo.size.width / 4 {
                                         offset = CGSize(width: newX, height: newY)
                                     }
                                 }
@@ -34,7 +34,7 @@ struct Question31: View {
                                     // حساب حدود drop المنطقة فوق الحيوانات (نستخدم قياسات geo)
                                     // الحيوانات تبدأ تقريبا من 30% إلى 55% من ارتفاع الشاشة
                                     let animalsTopY = geo.size.height * 0.3
-                                    let animalsBottomY = geo.size.height * 0.55
+                                    let animalsBottomY = geo.size.height * 0.8
                                     let droppedY = value.location.y
 
                                     if droppedY >= animalsTopY && droppedY <= animalsBottomY {
@@ -77,7 +77,7 @@ struct Question31: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
 
-                HStack(spacing: 20) {
+                HStack(spacing: 10) {
                     Image("animal4")
                         .resizable()
                         .scaledToFit()

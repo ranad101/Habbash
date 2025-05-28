@@ -1,7 +1,9 @@
 import SwiftUI
 import SwiftData
 struct Question40: View {
+    var onNext: () -> Void = {}
     var body: some View {
+    
         VStack(spacing: 32) {
             Spacer(minLength: 60)
             Text("تذكر هذي الاكواد !")
@@ -19,6 +21,17 @@ struct Question40: View {
     }
 }
 
+
 #Preview {
-    Question40()
-} 
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: UserProgress.self, configurations: config)
+    let userProgress = UserProgress()
+    container.mainContext.insert(userProgress)
+    
+    return QuestionHostView(
+        viewModel: GameViewModel(modelContext: container.mainContext, userProgress: userProgress),
+        questionNumber: "٤٠",
+        content: Question40(onNext: {})
+    )
+}
+

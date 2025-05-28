@@ -88,7 +88,7 @@ struct Question41: View {
                             }
 
                             if currentPath == "green" {
-                                if greenRight == 16 && greenUp < 31 && greenLeft == 0 {
+                                if greenRight == 16 && greenUp < 30 && greenLeft == 0 {
                                     playerOffset.y -= 10
                                     greenUp += 1
                                 }
@@ -124,7 +124,7 @@ struct Question41: View {
                             }
 
                             if currentPath == "green" {
-                                if greenRight == 16 && greenUp == 31 && greenLeft < 14 {
+                                if greenRight == 16 && greenUp == 30 && greenLeft < 14 {
                                     playerOffset.x -= 10
                                     greenLeft += 1
                                     if greenLeft == 14 {
@@ -171,7 +171,7 @@ struct Question41: View {
                                 if greenRight < 16 && greenUp == 0 && greenLeft == 0 {
                                     playerOffset.x += 10
                                     greenRight += 1
-                                } else if greenRight == 16 && greenUp == 31 && greenLeft > 0 {
+                                } else if greenRight == 16 && greenUp == 30 && greenLeft > 0 {
                                     playerOffset.x += 10
                                     greenLeft -= 1
                                 }
@@ -287,4 +287,3 @@ struct Question41: View {
     )
     .environment(\.modelContext, context)
 }
-

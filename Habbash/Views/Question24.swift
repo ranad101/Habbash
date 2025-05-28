@@ -4,14 +4,16 @@ import SwiftData
 
 struct Question24: View {
     @State private var skipCount = 0
-    @State private var selectedAnswer: Int? = nil // هذا سيظل لخيارات الإجابة العادية
+    @State private var selectedAnswer: Int? = nil
     @State private var showFullScreenFeedback = false
-    @State private var isCorrectAnswerForOption: Bool = false // لتوضيح أنها تخص خيارات الأجوبة
+    @State private var isCorrectAnswerForOption: Bool = false
     @State private var audioPlayer: AVAudioPlayer?
 
-    @Binding var didTapHostQuestionNumberAsCorrect: Bool // تم تغيير الاسم ليكون أوضح
+    @Binding var didTapHostQuestionNumberAsCorrect: Bool
 
-    let answers = ["١٨", "٢٣،٩٣١", "١٢", "مو موجود!!!"] // مصفوفة الخيارات الأصلية، بدون "٢٤"
+    let answers = ["١٨", "٢٣،٩٣١", "١٢", "مو موجود!!!"]
+    let questionNumber = ""
+    
     let questionText = "٢٥ - ١ = ؟"
     let maxSkips = 6
     var onNext: () -> Void = {}
@@ -19,49 +21,65 @@ struct Question24: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                VStack() {
-                    VStack(spacing: 50) {
-                        Text(questionText)
+                VStack(alignment: .trailing, spacing: 30) {
+                    // رقم السؤال مع زر شفاف فوقه
+                    ZStack(alignment: .topTrailing) {
+                        Text(questionNumber)
                             .font(.title)
                             .fontWeight(.bold)
                             .padding(.top, 10)
+                            .padding(.trailing, 16)
 
-                        VStack(spacing: 20) {
-                            HStack(spacing: 24) {
-                                answerButton(index: 0)
-                                answerButton(index: 1)
-                            }
-                            HStack(spacing: 24) {
-                                answerButton(index: 2)
-                                answerButton(index: 3)
-                            }
+                        Button(action: {
+                            didTapHostQuestionNumberAsCorrect = true
+                        }) {
+
                         }
-                        .padding(.horizontal, 16)
-                        .environment(\.layoutDirection, .rightToLeft)
+                        .buttonStyle(PlainButtonStyle())
+                        .contentShape(Rectangle())
+                        .padding(.top, -40)
                     }
-                    .frame(maxWidth: .infinity)
-                    .frame(maxHeight: .infinity, alignment: .center)
-
                     
-                    .padding(.bottom, 50)
+                    Spacer().frame(height: 20)
+                    
+                    // نص السؤال
+                    Text(questionText)
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .multilineTextAlignment(.center)
+                        .padding(.bottom, 30)
+                        .frame(maxWidth: .infinity)
+
+                    // خيارات الإجابة
+                    VStack(spacing: 33) {
+                        HStack(spacing: 33) {
+                            answerButton(index: 0)
+                            answerButton(index: 1)
+                        }
+                        HStack(spacing: 33) {
+                            answerButton(index: 2)
+                            answerButton(index: 3)
+                        }
+                    }
+                    .padding(.horizontal, 33)
                     
                 }
-
-                // ⭐️ إظهار علامة الصح الكبيرة في منتصف Question24
-                // عندما يتم الضغط على رقم السؤال (٢٤) في QuestionHostView ويعتبر إجابة صحيحة.
+                .padding(.bottom, 160)
+                
+                // علامة الصح الكبيرة تظهر عند الضغط على زر رقم السؤال
                 if didTapHostQuestionNumberAsCorrect {
                     Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 80)) // حجم كبير
+                        .font(.system(size: 80))
                         .foregroundColor(.green)
-                        .transition(.scale.animation(.easeOut)) // تأثير سلس
-                        .position(x: geometry.size.width / 2, y: geometry.size.height / 2) // في المنتصف
+                        .transition(.scale.animation(.easeOut))
+                        .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
                 }
             }
             .overlay(
                 Button(action: {
                     onNext()
                 }) {
-                    Color.clear
+                    Color.white.opacity(0.1) // Use red for debugging, change to .clear when done
                         .frame(width: 60, height: 60)
                 }
                 .buttonStyle(PlainButtonStyle())
@@ -78,21 +96,12 @@ struct Question24: View {
             playSound(isCorrect: false)
         }) {
             ZStack {
-                // يمكنك إظهار صورة مختلفة للزر إذا كانت الإجابة خاطئة
-                if selectedAnswer == index { // إذا تم اختيار هذا الزر
-                    Image("BUTTON.REGULAR") // يمكنك استخدام صورة "BUTTON.INCORRECT" إذا كانت متوفرة
-                        .resizable()
-                        .frame(width: 151.68, height: 81)
-                } else {
-                    Image("BUTTON.REGULAR")
-                        .resizable()
-                        .frame(width: 151.68, height: 81)
-                }
-
+                Image("BUTTON.REGULAR")
+                    .resizable()
+                    .frame(width: 151.68, height: 81)
                 Text(answers[index])
                     .font(.system(size: 22, weight: .bold))
                     .foregroundColor(.white)
-                    .padding(.horizontal, 8)
             }
         }
         .buttonStyle(PlainButtonStyle())
@@ -112,7 +121,7 @@ struct Question24: View {
     }
 }
 
-
+// المعاينة (تأكد أن QuestionHostView و GameViewModel موجودين بمشروعك)
 #Preview {
     let container = try! ModelContainer(for: UserProgress.self, configurations: .init(isStoredInMemoryOnly: true))
     let context = ModelContext(container)

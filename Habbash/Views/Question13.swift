@@ -40,7 +40,7 @@ struct Question13: View {
                             .fill(answerState == .correct ? Color.green : Color.black)
                             .frame(width: 4, height: 7)
                     }
-                    .offset(x: -3, y: -10) // <-- عدل الرقم هنا حتى تصل للمكان المثالي
+                    .offset(x: -3, y: -10)
                 }
                 // الدوائر الزرقاء في منتصف الشاشة وأعلى قليلاً
                 ZStack {
@@ -55,6 +55,8 @@ struct Question13: View {
                 }
                 .frame(height: geo.size.height * 0.35)
                 .frame(maxWidth: .infinity)
+                .offset(y: 40) // <-- تم تحريك الدوائر للأسفل هنا
+
                 Spacer()
                 // Feedback
                 if answerState == .correct {
@@ -95,4 +97,3 @@ struct Question13: View {
     )
     .environment(\.modelContext, context)
 }
-

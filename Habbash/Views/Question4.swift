@@ -1,10 +1,12 @@
+
+
 import SwiftUI
 import SwiftData
 struct Question4: View {
     @State private var showColors = true
     var onNext: () -> Void
 
-    let correctIndex = 3 // الزر الأخضر (الإجابة الصحيحة)
+    let correctIndex = 1 // الزر الأخضر (الإجابة الصحيحة)
     let questionText = "ناظر زين!!"
     let questionNumber = "٤"
     let answers = ["", "", "", ""]
