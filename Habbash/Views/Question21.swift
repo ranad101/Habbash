@@ -69,10 +69,10 @@ struct CamelsGrid: View {
         GeometryReader { camelGeo in
             Image(camelImages[index])
                 .resizable()
-                .frame(width: 200, height: 260)
+                .frame(width: 150, height: 200)
                 .offset(
-                    x: (index == 0 || index == 2) ? 30 : 0,
-                    y: (index == 0 || index == 2) ? 35 : 0
+                    x: (index == 0 || index == 2) ? 40 : 0,
+                    y: (index == 0 || index == 2) ? 50 : 0
                 )
                 .onAppear {
                     DispatchQueue.main.async {
@@ -85,7 +85,7 @@ struct CamelsGrid: View {
                     }
                 }
         }
-        .frame(width: 200, height: 260)
+        .frame(width: 170, height: 150)
     }
 }
 
@@ -161,4 +161,3 @@ struct DraggableWord: View {
         content: Question21(onNext: {})
     )
 }
-

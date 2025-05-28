@@ -83,7 +83,7 @@ struct Question6: View {
                     Button(action: {
                         cupCount += 1
                     }) {
-                        Image("plus6")
+                        Image("plus4")
                             .resizable()
                             .frame(width: 42, height: 40)
                     }
@@ -96,7 +96,7 @@ struct Question6: View {
                             cupCount -= 1
                         }
                     }) {
-                        Image("minus6")
+                        Image("minus4")
                             .resizable()
                             .frame(width: 42, height: 40)
                     }
@@ -114,7 +114,7 @@ struct Question6: View {
                         showResult = "إجابة خاطئة ❌"
                     }
                 }) {
-                    Image("okay")
+                    Image("okay4")
                         .resizable()
                         .frame(width: 130, height: 50)
                 }
@@ -144,5 +144,3 @@ struct Question6: View {
         content: Question6(onNext: {})
     )
 }
-
-

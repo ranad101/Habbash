@@ -1,7 +1,9 @@
 import SwiftUI
 
 struct Question40: View {
+    var onNext: () -> Void = {}
     var body: some View {
+    
         VStack(spacing: 32) {
             Spacer(minLength: 60)
             Text("تذكر هذي الاكواد !")
@@ -19,6 +21,12 @@ struct Question40: View {
     }
 }
 
+
 #Preview {
-    Question40()
-} 
+    QuestionHostView(
+        viewModel: GameViewModel(),
+        questionNumber: "٤٠",
+        content: Question40(onNext: {})
+    )
+}
+
