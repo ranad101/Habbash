@@ -105,7 +105,7 @@ struct DraggableWord: View {
             .foregroundColor(.black)
             .background(
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(isDragging ? Color.blue.opacity(0.2) : Color.clear)
+                    .fill(isDragging ? Color.white.opacity(0.2) : Color.clear)
             )
             .offset(dragOffset)
             .background(

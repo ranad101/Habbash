@@ -33,7 +33,7 @@ class GameViewModel: ObservableObject {
         //  7: Q8 interactive placeholder
         Question(id: 8, questionText: "", answers: [], correctAnswerIndex: 0, questionNumber: "٨", imageName: nil, questionFontSize: nil, answerFontSizes: nil),
         //  8: Q9 MCQ
-        Question(id: 9, questionText: "النخلة", answers: ["سعف","جذور","رطب","جذع"], correctAnswerIndex: 2, questionNumber: "٩", imageName: "root", questionFontSize: 28, answerFontSizes: [22,20,18,24]),
+        Question(id: 9, questionText: "النخلة", answers: ["سعف","جذور","رطب","جذع"], correctAnswerIndex: 2, questionNumber: "٩", imageName: "root1", questionFontSize: 28, answerFontSizes: [22,20,18,24]),
         //  9: Q10 interactive placeholder
         Question(id: 10, questionText: "", answers: [], correctAnswerIndex: 0, questionNumber: "١٠", imageName: nil, questionFontSize: nil, answerFontSizes: nil),
         // 10: Q11 MCQ
@@ -128,7 +128,7 @@ class GameViewModel: ObservableObject {
         11: { onNext in AnyView(Question12(onNext: onNext)) },
         12: { onNext in AnyView(Question13(onNext: onNext)) },
         14: { onNext in AnyView(Question15(onNext: onNext)) },
-        16: { onNext in AnyView(Question17(viewModel: self, onNext: onNext)) },
+//        16: { onNext in AnyView(Question17,) },
         18: { onNext in AnyView(Question19(onNext: onNext)) },
         20: { onNext in AnyView(Question21(onNext: onNext)) },
         21: { onNext in AnyView(Question22(onNext: onNext)) },
