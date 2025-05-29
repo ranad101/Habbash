@@ -6,11 +6,12 @@ struct Question8: View {
     @State private var showCorrect = false
     @State private var showWrong = false
     @State private var pageNumber: String = "٨"
+    @State private var highlightScale: CGFloat = 1
     var onNext: () -> Void
 
     let letters = ["ت", "م", "ر"]
     let options: [(first: String, rest: String)] = [
-        ("ة", "موز"),
+        ("ت", "بسكو"),
         ("ر", "جز"),
         ("م", "برقوق الشا"),
         ("خ", "وخ")
@@ -39,7 +40,9 @@ struct Question8: View {
                         Text(letters[i])
                             .font(.system(size: 38, weight: .bold))
                             .foregroundColor(.black)
+                            .scaleEffect(highlightScale)
                             .offset(letterPositions[i])
+                            .animation(.easeInOut(duration: 0.3), value: highlightScale)
                     }
                 }
                 .padding(.leading, 40)
@@ -68,15 +71,19 @@ struct Question8: View {
                                     Button(action: {
                                         handleOptionTap(options[idx].first)
                                     }) {
-                                        Text(options[idx].first)
-                                            .font(.custom("BalooBhaijaan2-Medium", size: 22))
-                                            .foregroundColor(.white)
+                                        HStack(spacing: 0) {
+                                            Text(options[idx].first)
+                                                .font(.custom("BalooBhaijaan2-Medium", size: 22))
+                                                .foregroundColor(.white)
+                                                .scaleEffect(highlightScale)
+                                                .animation(.easeInOut(duration: 0.3), value: highlightScale)
+                                            Text(options[idx].rest)
+                                                .font(.custom("BalooBhaijaan2-Medium", size: 22))
+                                                .foregroundColor(.white)
+                                        }
                                     }
                                     .buttonStyle(PlainButtonStyle())
                                     .allowsHitTesting(!(showCorrect || answerStep > 2))
-                                    Text(options[idx].rest)
-                                        .font(.custom("BalooBhaijaan2-Medium", size: 22))
-                                        .foregroundColor(.white)
                                 }
                             }
                             .padding(.horizontal, 8)
@@ -109,6 +116,13 @@ struct Question8: View {
             }
 
             Spacer()
+        }
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                withAnimation {
+                    highlightScale = 1.25
+                }
+            }
         }
     }
 

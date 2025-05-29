@@ -4,7 +4,7 @@ struct Question40: View {
     var onNext: () -> Void = {}
     var body: some View {
     
-        VStack(spacing: 32) {
+        VStack(spacing: 3) {
             Spacer(minLength: 60)
             Text("تذكر هذي الاكواد !")
                 .font(.custom("BalooBhaijaan2-Medium", size: 28))
@@ -14,8 +14,16 @@ struct Question40: View {
             Text("2489")
                 .font(.custom("BalooBhaijaan2-Medium", size: 48))
                 .foregroundColor(.black)
-                .padding(.top, 16)
+                .padding(.top, 10)
             Spacer()
+            Button(action: onNext) {
+                Text("طيب")
+                    .font(.custom("BalooBhaijaan2-Medium", size: 28))
+                    .foregroundColor(.red)
+                    
+                    
+                    
+            }
         }
         .padding(.top, 0)
     }

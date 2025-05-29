@@ -8,13 +8,14 @@ import SwiftData
 
 // MARK: - Game ViewModel
 class GameViewModel: ObservableObject {
-    enum Screen { case splash, video1, choice, video2, video3, start, question, gameOver, finalVideo }
+    enum Screen { case splash, video1, choice, video2, video3, start, question, gameOver, finalVideo, congrats }
 
     @Published var screen: Screen = .splash
     @Published var currentQuestionIndex: Int = 0
     @Published var hearts: Int = 3
     @Published var skips: Int = 3
     @Published var userProgress: UserProgress
+    @Published var isDebugMode: Bool = false
     var hasSeenIntroVideos: Bool {
         get { userProgress.hasSeenIntroVideos }
         set { userProgress.hasSeenIntroVideos = newValue; try? modelContext.save() }
@@ -28,7 +29,7 @@ class GameViewModel: ObservableObject {
         //  1: Q2 MCQ
         Question(id: 2, questionText: "بولقملاب لاؤسلا ةباجا", answers: ["هاه؟","إجابة","بالمقلوب","بيط"], correctAnswerIndex: 3, questionNumber: "٢", imageName: nil, questionFontSize: 28, answerFontSizes: [22,20,18,24]),
         //  2: Q3 MCQ
-        Question(id: 3, questionText: "وش تاسع حرف من الحروف الهجائية", answers: ["هـ","ر","ل","ذ"], correctAnswerIndex: 0, questionNumber: "٣", imageName: nil, questionFontSize: 28, answerFontSizes: [25,25,25,25]),
+        Question(id: 3, questionText: "وش تاسع حرف من الحروف الهجائية", answers: ["ر","هـ","ل","ذ"], correctAnswerIndex: 1, questionNumber: "٣", imageName: nil, questionFontSize: 28, answerFontSizes: [25,25,25,25]),
         //  3: Q4 interactive placeholder
         Question(id: 4, questionText: "", answers: [], correctAnswerIndex: 0, questionNumber: "٤", imageName: nil, questionFontSize: nil, answerFontSizes: nil),
         //  4: Q5 interactive placeholder
@@ -36,21 +37,21 @@ class GameViewModel: ObservableObject {
         //  5: Q6 interactive placeholder
         Question(id: 6, questionText: "", answers: [], correctAnswerIndex: 0, questionNumber: "٦", imageName: nil, questionFontSize: nil, answerFontSizes: nil),
         //  6: Q7 MCQ
-        Question(id: 7, questionText: "اذا فزت بسباق نمل وش بيصير؟", answers: ["الملكة ترسلك شكر رسمي","تصير انت ملك النمل","النمل يقولك يا شطور","تنطرد لانك كثير"], correctAnswerIndex: 2, questionNumber: "٧", imageName: nil, questionFontSize: 28, answerFontSizes: [22,20,18,24]),
+        Question(id: 7, questionText: "اذا فزت بسباق نمل وش بيصير؟", answers: ["الملكة ترسلك شكر رسمي","تصير انت ملك النمل","النمل يقولك يا شطور","تنطرد لانك كبير"], correctAnswerIndex: 2, questionNumber: "٧", imageName: nil, questionFontSize: 28, answerFontSizes: [15,18,18,18]),
         //  7: Q8 interactive placeholder
         Question(id: 8, questionText: "", answers: [], correctAnswerIndex: 0, questionNumber: "٨", imageName: nil, questionFontSize: nil, answerFontSizes: nil),
         //  8: Q9 MCQ
-        Question(id: 9, questionText: "النخلة", answers: ["سعف","جذور","رطب","جذع"], correctAnswerIndex: 2, questionNumber: "٩", imageName: "root1", questionFontSize: 28, answerFontSizes: [22,20,18,24]),
+        Question(id: 9, questionText: "احسب لي جذر النخلة؟", answers: ["سعف","جذور","رطب","جذع"], correctAnswerIndex: 2, questionNumber: "٩", imageName: "root1", questionFontSize: 28, answerFontSizes: [24,24,24,24]),
         //  9: Q10 interactive placeholder
         Question(id: 10, questionText: "", answers: [], correctAnswerIndex: 0, questionNumber: "١٠", imageName: nil, questionFontSize: nil, answerFontSizes: nil),
         // 10: Q11 MCQ
-        Question(id: 11, questionText: "كم عدد الموزات اللي تقدر تاكلها على معده فاضية؟", answers: ["تعتمد على الحجم","ولا وحدة","وحدة","خمسة"], correctAnswerIndex: 2, questionNumber: "١١", imageName: nil, questionFontSize: 28, answerFontSizes: [22,20,18,24]),
+        Question(id: 11, questionText: "كم عدد الموزات اللي تقدر تاكلها على معده فاضية؟", answers: ["تعتمد على الحجم","وحدة","ولا وحدة","خمسة"], correctAnswerIndex: 1, questionNumber: "١١", imageName: nil, questionFontSize: 28, answerFontSizes: [22,20,18,24]),
         // 11: Q12 interactive placeholder
         Question(id: 12, questionText: "", answers: [], correctAnswerIndex: 0, questionNumber: "١٢", imageName: nil, questionFontSize: nil, answerFontSizes: nil),
         // 12: Q13 interactive placeholder
         Question(id: 13, questionText: "", answers: [], correctAnswerIndex: 0, questionNumber: "١٣", imageName: nil, questionFontSize: nil, answerFontSizes: nil),
         // 13: Q14 MCQ
-        Question(id: 14, questionText: "نتمنى انك كنت مركز لرقم السؤال", answers: ["روح لسؤال ١٧","روح لسؤال ١٥","روح لسؤال ١٤","روح لسؤال ١٦"], correctAnswerIndex: 1, questionNumber: "١٤", imageName: nil, questionFontSize: 28, answerFontSizes: [22,20,18,24]),
+        Question(id: 14, questionText: "نتمنى انك كنت مركز لرقم السؤال", answers: ["روح لسؤال ١٧","روح لسؤال ١٦","روح لسؤال ١٤","روح لسؤال ١٥"], correctAnswerIndex: 3, questionNumber: "?", imageName: nil, questionFontSize: 28, answerFontSizes: [22,20,18,24]),
         // 14: Q15 interactive placeholder
         Question(id: 15, questionText: "", answers: [], correctAnswerIndex: 0, questionNumber: "١٥", imageName: nil, questionFontSize: nil, answerFontSizes: nil),
         // 15: Q16 MCQ
@@ -68,7 +69,7 @@ class GameViewModel: ObservableObject {
         // 21: Q22 interactive placeholder
         Question(id: 22, questionText: "", answers: [], correctAnswerIndex: 0, questionNumber: "٢٢", imageName: nil, questionFontSize: nil, answerFontSizes: nil),
         // 22: Q23 MCQ
-        Question(id: 23, questionText: "اجابة هذا السؤال كبيرة مره", answers: ["كبيرة مره","راسي","مرة كبيرة","علامة لا نهايه"], correctAnswerIndex: 1, questionNumber: "٢٣", imageName: nil, questionFontSize: 28, answerFontSizes: [22,20,18,24]),
+        Question(id: 23, questionText: "اجابة هذا السؤال كبيرة مره", answers: ["كبيرة مره","∞","مرة كبيرة","راسي"], correctAnswerIndex: 3, questionNumber: "٢٣", imageName: nil, questionFontSize: 28, answerFontSizes: [22,25,18,24]),
         // 23: Q24 interactive placeholder
         Question(id: 24, questionText: "", answers: [], correctAnswerIndex: 0, questionNumber: "٢٤", imageName: nil, questionFontSize: nil, answerFontSizes: nil),
         // 24: Q25 interactive placeholder
@@ -86,9 +87,9 @@ class GameViewModel: ObservableObject {
         // 30: Q31 interactive placeholder
         Question(id: 31, questionText: "", answers: [], correctAnswerIndex: 0, questionNumber: "٣١", imageName: nil, questionFontSize: nil, answerFontSizes: nil),
         // 31: Q32 MCQ
-        Question(id: 32, questionText: "هيبه وتأمر على عشرين رجال وحرمه ؟", answers: ["الصافرة","الحكم","المعلم","الجرس"], correctAnswerIndex: 0, questionNumber: "٣٢", imageName: nil, questionFontSize: 28, answerFontSizes: [22,20,18,24]),
+        Question(id: 32, questionText: "هيبه وتأمر على عشرين رجال وحرمه ؟", answers: ["المعلم","الحكم","الصافرة","الجرس"], correctAnswerIndex: 2, questionNumber: "٣٢", imageName: nil, questionFontSize: 28, answerFontSizes: [22,20,18,24]),
         // 32: Q33 MCQ
-        Question(id: 33, questionText: "وش تاسع حرف من الحروف الأبجدية", answers: ["هـ","ذ","ر","كأن هذا السوال مر علي🤔"], correctAnswerIndex: 1, questionNumber: "٣٣", imageName: nil, questionFontSize: 28, answerFontSizes: [22,20,18,24]),
+        Question(id: 33, questionText: "وش تاسع حرف من الحروف الأبجدية", answers: ["هـ","ذ","ر","كأن هذا السوال مر علي🤔"], correctAnswerIndex: 1, questionNumber: "٣٣", imageName: nil, questionFontSize: 28, answerFontSizes: [26,26,26,10]),
         // 33: Q34 interactive placeholder
         Question(id: 34, questionText: "", answers: [], correctAnswerIndex: 0, questionNumber: "٣٤", imageName: nil, questionFontSize: nil, answerFontSizes: nil),
         // 34: Q35 MCQ
@@ -127,9 +128,9 @@ class GameViewModel: ObservableObject {
 
     // Map question indices to interactive SwiftUI views
     private lazy var interactiveBuilders: [Int: (@escaping () -> Void) -> AnyView] = [
-        3:  { onNext in AnyView(Question4(onNext: onNext)) },
+        3:  { onNext in AnyView(Question4(viewModel: self, onNext: onNext)) },
         4:  { onNext in AnyView(Question5(viewModel: self, onNext: onNext)) },
-        5:  { onNext in AnyView(Question6(onNext: onNext)) },
+        5:  { onNext in AnyView(Question6(viewModel: self, onNext: onNext)) },
         7:  { onNext in AnyView(Question8(onNext: onNext)) },
         9:  { onNext in AnyView(Question10(onNext: onNext)) },
         11: { onNext in AnyView(Question12(onNext: onNext)) },
@@ -194,17 +195,23 @@ class GameViewModel: ObservableObject {
         try? modelContext.save()
         next() } }
     func next() {
-        if currentQuestionIndex+1 < questions.count {
+        print("next() called, currentQuestionIndex: \(currentQuestionIndex), questions.count: \(questions.count)")
+        if currentQuestionIndex + 1 < questions.count {
             currentQuestionIndex += 1
             userProgress.currentQuestion = currentQuestionIndex
             try? modelContext.save()
-            // If we just finished question 50, go to final video
             if currentQuestionIndex == 50 {
+                print("Going to final video (currentQuestionIndex == 50)")
                 screen = .finalVideo
                 return
             }
+        } else if currentQuestionIndex + 1 == questions.count {
+            print("Going to final video (currentQuestionIndex + 1 == questions.count)")
+            screen = .finalVideo
+        } else {
+            print("Going to game over")
+            screen = .gameOver
         }
-        else { screen = .gameOver }
     }
     func resetGame() { hearts = 3; skips = 3; currentQuestionIndex = 0; screen = .start }
     // Navigation shortcuts
@@ -221,6 +228,7 @@ class GameViewModel: ObservableObject {
         }
     }
     func goToFinalVideo() { screen = .finalVideo }
+    func goToCongrats() { screen = .congrats }
 
     init(modelContext: ModelContext, userProgress: UserProgress) {
         self.userProgress = userProgress
@@ -234,6 +242,14 @@ class GameViewModel: ObservableObject {
         self.skips = userProgress.skips
         self.currentQuestionIndex = userProgress.currentQuestion
         self.screen = .question
+    }
+
+    func jumpToQuestion(_ questionNumber: Int) {
+        guard questionNumber >= 0 && questionNumber < questions.count else { return }
+        currentQuestionIndex = questionNumber
+        userProgress.currentQuestion = questionNumber
+        try? modelContext.save()
+        screen = .question
     }
 }
 

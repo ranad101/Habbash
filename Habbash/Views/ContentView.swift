@@ -29,13 +29,16 @@ struct ContentView: View {
     var body: some View {
         switch viewModel.screen {
         case .splash:
-            SplashView(onFinish: {
-                if viewModel.hasSeenIntroVideos {
-                    viewModel.goToStart()
-                } else {
-                    viewModel.goToVideo1()
-                }
-            })
+            SplashView(
+                onFinish: {
+                    if viewModel.hasSeenIntroVideos {
+                        viewModel.goToStart()
+                    } else {
+                        viewModel.goToVideo1()
+                    }
+                },
+                viewModel: viewModel
+            )
         case .video1:
             VideoView(videoName: "video1", onFinish: { viewModel.goToChoice() })
         case .choice:
@@ -53,6 +56,10 @@ struct ContentView: View {
                 viewModel.hasSeenIntroVideos = true
                 viewModel.goToStart()
             })
+        case .finalVideo:
+            VideoView(videoName: "finalvid", onFinish: { viewModel.goToCongrats() })
+        case .congrats:
+            CongratsView(onStartOver: { viewModel.goToStart() })
         case .start:
             StartPageView(
                 isContinue: viewModel.userProgress.currentQuestion > 0 && viewModel.userProgress.hearts > 0,
@@ -71,11 +78,11 @@ struct ContentView: View {
             if let question = viewModel.currentQuestion {
                 switch viewModel.currentQuestionIndex {
                 case 3:
-                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question4(onNext: { viewModel.next() }))
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question4(viewModel: viewModel, onNext: { viewModel.next() }))
                 case 4:
                     QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question5(viewModel: viewModel, onNext: { viewModel.next() }))
                 case 5:
-                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question6(onNext: { viewModel.next() }))
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question6(viewModel: viewModel, onNext: { viewModel.next() }))
                 case 7:
                     QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question8(onNext: { viewModel.next() }))
                 case 9:
@@ -121,7 +128,7 @@ struct ContentView: View {
                 case 37:
                     QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question38(onNext: { viewModel.next() }))
                 case 39:
-                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question40())
+                    QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question40(onNext: { viewModel.next() }))
                 case 40:
                     QuestionHostView(viewModel: viewModel, questionNumber: question.questionNumber, content: Question41(onNext: { viewModel.next() }))
                 case 41:

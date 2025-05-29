@@ -31,19 +31,17 @@ struct VideoView: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass
 
     private var fileExtension: String {
-        if videoName == "video1" {
-            return "mov"
-        } else {
-            return "mp4"
-        }
+        return "mp4"
     }
 
     private var player: AVPlayer {
         if let url = Bundle.main.url(forResource: videoName, withExtension: fileExtension) {
+            print("Found video file: \(videoName).\(fileExtension)")
             let player = AVPlayer(url: url)
             player.seek(to: .zero)
             return player
         }
+        print("Video file NOT found: \(videoName).\(fileExtension)")
         return AVPlayer()
     }
 

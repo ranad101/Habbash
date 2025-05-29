@@ -1,9 +1,9 @@
-
-
 import SwiftUI
 import SwiftData
+
 struct Question4: View {
     @State private var showColors = true
+    @ObservedObject var viewModel: GameViewModel
     var onNext: () -> Void
 
     let correctIndex = 1 // الزر الأخضر (الإجابة الصحيحة)
@@ -50,8 +50,14 @@ struct Question4: View {
     // زر الإجابة
     func answerButton(index: Int) -> some View {
         Button(action: {
-            if index == correctIndex && !showColors {
-                onNext()
+            if !showColors {
+                if index == correctIndex {
+                    SoundPlayer.playSound(named: "success")
+                    viewModel.answer(isCorrect: true)
+                } else {
+                    SoundPlayer.playSound(named: "failure")
+                    viewModel.answer(isCorrect: false)
+                }
             }
         }) {
             if showColors {
@@ -79,7 +85,7 @@ struct Question4: View {
     QuestionHostView(
         viewModel: viewModel,
         questionNumber: "٤",
-        content: Question4(onNext: {})
+        content: Question4(viewModel: viewModel, onNext: {})
     )
     .environment(\.modelContext, context)
 }

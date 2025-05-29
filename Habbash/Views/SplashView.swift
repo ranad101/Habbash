@@ -1,10 +1,14 @@
 import SwiftUI
+import SwiftData
 
 struct SplashView: View {
     var onFinish: () -> Void
     @State private var scale: CGFloat = 0.9
     @State private var titleScale: CGFloat = 0.7
     @State private var titleOpacity: Double = 0.0
+    @ObservedObject var viewModel: GameViewModel
+    @State private var tapCount = 0
+    @State private var lastTapTime = Date()
     
     var body: some View {
         ZStack {
@@ -18,7 +22,7 @@ struct SplashView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(height: 90)
-                    Text("Habbash")
+                    Text("هبّاش")
                         .font(.custom("BalooBhaijaan2-Medium", size: 64))
                         .foregroundColor(Color(hex: "#83300E"))
                         .shadow(color: Color.black.opacity(0.15), radius: 4, x: 0, y: 2)
@@ -55,10 +59,28 @@ struct SplashView: View {
                 Spacer(minLength: 0)
             }
         }
+        .onTapGesture(count: 1) {
+            let now = Date()
+            if now.timeIntervalSince(lastTapTime) < 1.0 {
+                tapCount += 1
+                if tapCount >= 3 {
+                    viewModel.isDebugMode = true
+                    tapCount = 0
+                }
+            } else {
+                tapCount = 1
+            }
+            lastTapTime = now
+        }
     }
 }
 
 #Preview {
-    SplashView(onFinish: {})
+    let container = try! ModelContainer(for: UserProgress.self, configurations: .init(isStoredInMemoryOnly: true))
+    let context = ModelContext(container)
+    let userProgress = UserProgress()
+    let viewModel = GameViewModel(modelContext: context, userProgress: userProgress)
+    SplashView(onFinish: {}, viewModel: viewModel)
+        .environment(\.modelContext, context)
 }
 
