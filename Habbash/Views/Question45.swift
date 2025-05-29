@@ -15,10 +15,10 @@ struct Question45: View {
     let correctIndex = 2
     // Adjustable positions for each answer (relative to geometry size)
     @State private var positions: [CGPoint] = [
-        CGPoint(x: 0.28, y: 0.54), // Top left
-        CGPoint(x: 0.72, y: 0.54), // Top right
-        CGPoint(x: 0.28, y: 0.676), // Bottom left
-        CGPoint(x: 0.725, y: 0.676)  // Bottom right
+        CGPoint(x: 0.30, y: 0.50), // Top left
+        CGPoint(x: 0.72, y: 0.50), // Top right
+        CGPoint(x: 0.28, y: 0.69), // Bottom left
+        CGPoint(x: 0.725, y: 0.69)  // Bottom right
     ]
     // Adjustable background offsets
     let backgroundOffsetX: CGFloat = -1
@@ -26,10 +26,15 @@ struct Question45: View {
     var onNext: () -> Void = {}
     
     var body: some View {
-        VStack(spacing: 32) {
-            LazyVGrid(columns: [GridItem(), GridItem()], spacing: 24) {
+        GeometryReader { geo in
+            ZStack {
+                // Background image at the back
+                Image("background1")
+                    .padding(.bottom, 50)
+                // Answers
                 ForEach(0..<4) { i in
                     answerText(index: i)
+                        .position(x: geo.size.width * positions[i].x, y: geo.size.height * positions[i].y)
                         .onTapGesture {
                             if selected == nil {
                                 selected = i
@@ -44,22 +49,17 @@ struct Question45: View {
                         }
                 }
             }
+             // Debug border
         }
-        
-        
-            Image("background1")
-            .padding(.bottom, 50)
-                
-        
     }
     
     func answerText(index: Int) -> some View {
         Text(answers[index])
-            .font(.custom("BalooBhaijaan2-Medium", size: 20))
+            .font(.custom("BalooBhaijaan2-Medium", size: 25))
             .foregroundColor(.white)
             .padding(8)
-            .frame(maxWidth: .infinity)
-            .background(selected == index ? (isCorrect == true && index == correctIndex ? Color.green : Color.red) : Color.blue)
+            .frame(width: 150, height: 50)
+            .background(selected == index ? (isCorrect == true && index == correctIndex ? Color.green : Color.red) : Color.clear)
             .cornerRadius(12)
     }
 }
