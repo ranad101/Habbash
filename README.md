@@ -41,18 +41,6 @@ This inspired us to build something funny, weird, and relatable — just like *T
 - Native iOS development tools
 - Designed using **Procreate** and **CapCut** for assets and animations
 
-##Try the Game
-
-**Available now on TestFlight!**  
-Scan the QR code in the project or [click here](#) *(replace with actual TestFlight link)*
-
-##Screenshots
-
-<p float="left">
-  <img src="Screenshots/screen1.png" width="200"/>
-  <img src="Screenshots/screen2.png" width="200"/>
-  <img src="Screenshots/screen3.png" width="200"/>
-</p>
 
 ##Team & Credits
 
